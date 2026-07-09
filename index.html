@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Verifica si tu vehiculo electrico en Peru requiere Placa, SOAT y Brevete. Herramienta ciudadana gratuita.">
+  <title>VerificaMoto PE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{--bg:#060d09;--bc:rgba(10,28,18,.82);--bh:rgba(16,42,28,.95);--fg:#e0f2e9;--fm:#6dba80;--ac:#00e676;--ad:rgba(0,230,118,.12);--ag:rgba(0,230,118,.25);--wa:#ffd740;--wd:rgba(255,215,64,.12);--da:#ff6e40;--dd:rgba(255,110,64,.12);--in:#40c4ff;--id:rgba(64,196,255,.12);--ne:#90a4ae;--nd:rgba(144,164,174,.12);--bd:rgba(0,230,118,.13);--r:14px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
+    canvas#pc{position:fixed;inset:0;z-index:0;pointer-events:none}.gl{position:fixed;width:400px;height:400px;border-radius:50%;filter:blur(120px);opacity:.12;pointer-events:none;z-index:0}.gl1{top:-120px;left:-80px;background:var(--ac)}.gl2{bottom:-160px;right:-120px;background:#004d40;opacity:.2}
+    .sh{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh}
+    .hd{backdrop-filter:blur(16px);background:rgba(6,13,9,.65);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50}
+    .lo{font-family:'Orbitron',monospace;font-weight:900;letter-spacing:-.5px}
+    .dd{display:flex;gap:5px;align-items:center}.dt{width:8px;height:8px;border-radius:50%;background:var(--ad);border:1px solid var(--bd);transition:.3s}.dt.u{background:var(--ac);border-color:var(--ac);box-shadow:0 0 6px var(--ag)}.dl{font-size:.7rem;color:var(--fm);margin-right:6px}.dp{animation:pp 2s ease-in-out infinite}@keyframes pp{0%,100%{opacity:1}50%{opacity:.4}}
+    .pt{height:3px;background:var(--ad);border-radius:2px;overflow:hidden}.pf{height:100%;background:var(--ac);border-radius:2px;transition:width .45s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px var(--ag)}
+    .si{display:flex;gap:8px;justify-content:center}.sd{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;border:2px solid var(--bd);color:var(--fm);background:0 0;transition:.35s}.sd.a{border-color:var(--ac);color:var(--ac);background:var(--ad)}.sd.d{border-color:var(--ac);color:var(--bg);background:var(--ac)}
+    .sv{position:relative;overflow:hidden}.sp{position:absolute;inset:0;padding:0 1rem;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .3s;display:flex;flex-direction:column;align-items:center}.sp.a{transform:translateX(0);opacity:1;pointer-events:all}.sp.l{transform:translateX(-110%);opacity:0;pointer-events:none}.sp.r{transform:translateX(110%);opacity:0;pointer-events:none}
+    .og{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;width:100%}
+    .oc{flex:1 1 165px;max-width:255px;min-width:150px;padding:1.2rem .85rem;border-radius:var(--r);background:var(--bc);border:2px solid var(--bd);cursor:pointer;transition:.25s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+    .oc:hover{background:var(--bh);border-color:var(--ac);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,230,118,.06)}.oc.s{border-color:var(--ac);background:var(--ad);box-shadow:0 0 25px var(--ag),inset 0 0 15px var(--ad);transform:translateY(-2px)}
+    .oc .iw{width:46px;height:46px;border-radius:50%;background:var(--ad);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--ac);transition:.25s}.oc.s .iw{background:var(--ac);color:var(--bg)}.oc .ot{font-weight:700;font-size:.85rem;line-height:1.3}.oc .od{font-size:.72rem;color:var(--fm);line-height:1.4}
+    .bp{padding:.7rem 1.8rem;border-radius:10px;font-weight:700;font-size:.9rem;background:var(--ac);color:var(--bg);border:0;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:.5rem;font-family:'DM Sans',sans-serif}.bp:hover{box-shadow:0 5px 20px var(--ag);transform:translateY(-1px)}.bp:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+    .bg{padding:.6rem 1.2rem;border-radius:10px;font-weight:500;font-size:.85rem;background:0 0;color:var(--fm);border:1px solid var(--bd);cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif}.bg:hover{border-color:var(--fm);color:var(--fg)}
+    .rp{animation:ri .5s cubic-bezier(.16,1,.3,1) forwards}@keyframes ri{from{opacity:0;transform:scale(.94) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .rb{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:999px;font-weight:700;font-size:.75rem;letter-spacing:.3px}
+    .rb.spa{background:rgba(0,230,118,.14);color:var(--ac);border:1px solid rgba(0,230,118,.28)}.rb.vmp{background:var(--id);color:var(--in);border:1px solid rgba(64,196,255,.28)}.rb.motorizado{background:var(--wd);color:var(--wa);border:1px solid rgba(255,215,64,.28)}.rb.noclasif{background:var(--nd);color:var(--ne);border:1px solid rgba(144,164,174,.28)}
+    .rr{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid var(--bd)}
+    .ri2{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}.ri2.y{background:var(--wd);color:var(--wa)}.ri2.n{background:var(--ad);color:var(--ac)}.ri2.w{background:var(--nd);color:var(--ne)}
+    .cr{display:flex;align-items:flex-start;gap:.5rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,.03)}.cr:last-child{border-bottom:0}
+    .cp{color:var(--ac)}.cf{color:var(--wa)}.cn{color:var(--ne)}.ci{color:var(--in)}
+    .cb{padding:.9rem;border-radius:12px;margin-bottom:1.1rem}.cb.spa{background:var(--ad);border:1px solid rgba(0,230,118,.14)}.cb.vmp{background:var(--id);border:1px solid rgba(64,196,255,.14)}.cb.motorizado{background:var(--wd);border:1px solid rgba(255,215,64,.14)}.cb.noclasif{background:var(--nd);border:1px solid rgba(144,164,174,.14)}
+    .cl{font-size:.68rem;font-weight:700;margin-bottom:.4rem;font-family:'Orbitron',monospace;letter-spacing:.4px}.cl.spa{color:var(--ac)}.cl.vmp{color:var(--in)}.cl.motorizado{color:var(--wa)}.cl.noclasif{color:var(--ne)}
+    .ct{font-size:.82rem;color:var(--fg);line-height:1.65;opacity:.9}
+    .cvr{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border-radius:10px;border:1px solid var(--bd);transition:background .2s}.cvr:hover{background:rgba(255,255,255,.015)}
+    .ci3{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}.ci3.ok{background:var(--ad);color:var(--ac)}.ci3.no{background:var(--dd);color:var(--da)}.ci3.ca{background:var(--wd);color:var(--wa)}
+    .vl{font-weight:700;font-size:.75rem}.vl.ok{color:var(--ac)}.vl.no{color:var(--da)}.vl.wa{color:var(--wa)}
+    .wb{padding:.8rem .9rem;border-radius:10px;display:flex;align-items:flex-start;gap:.7rem;background:var(--dd);border:1px solid rgba(255,110,64,.18);margin-top:.7rem}.wb i{color:var(--da);margin-top:2px;flex-shrink:0}
+    .it{font-size:.72rem;color:var(--fm);display:flex;align-items:flex-start;gap:.5rem;margin-top:.8rem;padding:.65rem;border-radius:8px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.03);line-height:1.45}
+    .mb{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;padding:.25rem .6rem;border-radius:6px;background:rgba(255,255,255,.03);color:var(--fm);border:1px solid rgba(255,255,255,.05)}
+    .ft{border-top:1px solid var(--bd);backdrop-filter:blur(8px);background:rgba(6,13,9,.4)}.lr{font-size:.6rem;color:rgba(109,186,128,.45);line-height:1.4}
+    /* Settings */
+    .so{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s}.so.open{opacity:1;pointer-events:all}
+    .sdr{position:absolute;right:0;top:0;bottom:0;width:400px;max-width:92vw;background:#0a1a10;border-left:1px solid var(--bd);padding:1.5rem;overflow-y:auto;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1)}.so.open .sdr{transform:translateX(0)}
+    .if{width:100%;padding:.65rem .9rem;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--bd);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s}.if:focus{border-color:var(--ac)}.if::placeholder{color:rgba(255,255,255,.18)}
+    .pi{padding:.7rem 0;border-bottom:1px solid var(--bd)}.pi:last-of-type{border-bottom:0}
+    .pi-h{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+    .tg{width:36px;height:20px;border-radius:10px;background:var(--bd);position:relative;cursor:pointer;transition:.2s;flex-shrink:0;border:0;padding:0;-webkit-appearance:none;appearance:none}
+    .tg::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--fm);transition:.2s}
+    .tg:checked{background:var(--ad);border-color:var(--ac)}.tg:checked::after{transform:translateX(16px);background:var(--ac)}
+    .ps{display:inline-flex;align-items:center;gap:.3rem;font-size:.65rem;padding:.2rem .55rem;border-radius:5px;white-space:nowrap}
+    .ps.ok{background:var(--ad);color:var(--ac);border:1px solid rgba(0,230,118,.15)}.ps.ex{background:var(--dd);color:var(--da);border:1px solid rgba(255,110,64,.15)}.ps.off{background:rgba(255,255,255,.03);color:var(--ne);border:1px solid rgba(255,255,255,.05)}
+    /* Toasts */
+    .tc{position:fixed;bottom:1.2rem;right:1.2rem;z-index:200;display:flex;flex-direction:column;gap:.4rem}
+    .tt{padding:.7rem 1rem;border-radius:10px;font-size:.8rem;backdrop-filter:blur(14px);border:1px solid var(--bd);animation:ti .35s ease forwards;display:flex;align-items:center;gap:.5rem;max-width:340px}
+    .tt.info{background:rgba(10,28,18,.9);color:var(--fg)}.tt.success{background:rgba(0,60,30,.9);color:var(--ac);border-color:rgba(0,230,118,.25)}.tt.error{background:rgba(60,15,5,.9);color:var(--da);border-color:rgba(255,110,64,.25)}.tt.warning{background:rgba(60,50,10,.9);color:var(--wa);border-color:rgba(255,215,64,.25)}.tt.x{animation:to .25s ease forwards}
+    @keyframes ti{from{opacity:0;transform:translateX(35px)}to{opacity:1;transform:translateX(0)}}@keyframes to{to{opacity:0;transform:translateX(35px)}}
+    .li{font-size:2.5rem;color:var(--fm);opacity:.25}
+    @media(max-width:640px){.oc{max-width:100%;padding:.9rem .7rem}.sdr{width:100%}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}.sp{transition:none}}
+    ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+  </style>
+</head>
+<body>
+  <canvas id="pc" aria-hidden="true"></canvas>
+  <div class="gl gl1" aria-hidden="true"></div>
+  <div class="gl gl2" aria-hidden="true"></div>
+  <div class="sh">
+    <header class="hd">
+      <div class="max-w-2xl mx-auto px-4 py-2.5 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:var(--ad);border:1px solid var(--bd)"><i class="fa-solid fa-bolt" style="color:var(--ac);font-size:.9rem"></i></div>
+          <span class="lo text-sm">Verifica<span style="color:var(--ac)">Moto</span> PE</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center" title="Consultas hoy"><span class="dl hidden sm:inline">Hoy</span><div class="dd" id="dots"></div></div>
+          <button onclick="tgS()" class="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Config" title="Config APIs"><i class="fa-solid fa-gear" style="color:var(--fm);font-size:.8rem"></i></button>
+        </div>
+      </div>
+    </header>
+    <main class="flex-1 flex flex-col items-center justify-start px-4 py-5">
+      <div class="max-w-lg w-full text-center mb-4">
+        <h1 class="text-lg sm:text-xl font-bold mb-1.5" style="font-family:'Orbitron',monospace">Tu vehiculo electrico, <span style="color:var(--ac)">legal o no</span>?</h1>
+        <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 4 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular. Cascada automatica entre multiples APIs gratuitas.</p>
+      </div>
+      <div class="max-w-lg w-full" id="mc"></div>
+    </main>
+    <footer class="ft mt-auto">
+      <div class="max-w-2xl mx-auto px-4 py-3 text-center">
+        <span class="text-xs" style="color:var(--fm)"><i class="fa-solid fa-triangle-exclamation" style="color:var(--wa);font-size:.6rem"></i> Multas desde agosto 2026: S/ 660 primera vez, S/ 1,320 reincidencia</span>
+        <div class="lr mt-1">R.D. 0016-2026-MTC/18 &bull; DS 019-2018-MTC &bull; DS 012-2020-MTC &bull; DS 058-2003-MTC &bull; R. 039-2013-SUNARP/SN &bull; DS 016-2009-MTC</div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="so" id="sov" onclick="if(event.target===this)tgS()">
+    <div class="sdr" role="dialog" aria-label="Config APIs">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-bold" style="font-family:'Orbitron',monospace;font-size:.9rem">Config APIs en Cascada</h2>
+        <button onclick="tgS()" class="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5" aria-label="Cerrar"><i class="fa-solid fa-xmark" style="color:var(--fm)"></i></button>
+      </div>
+      <p class="text-xs mb-4" style="color:var(--fm);line-height:1.5"><i class="fa-solid fa-arrows-rotate" style="color:var(--ac)"></i> Activa los proveedores que tengas. Si uno se agota, el sistema pasa automaticamente al siguiente sin que configures nada.</p>
+      <div id="prov-list"></div>
+      <div class="flex gap-2 mt-4 pt-3" style="border-top:1px solid var(--bd)">
+        <button onclick="testAll()" class="bp flex-1 justify-center text-sm"><i class="fa-solid fa-plug"></i> Probar activas</button>
+        <button onclick="resetExh()" class="bg flex-1 justify-center text-sm"><i class="fa-solid fa-rotate-right"></i> Restablecer</button>
+      </div>
+      <div class="mt-3 p-2.5 rounded-lg" style="background:var(--ad);border:1px solid var(--bd)">
+        <p class="text-xs" style="color:var(--fm);line-height:1.5"><i class="fa-solid fa-circle-info" style="color:var(--ac)"></i> La app funciona sin APIs usando logica local. Con tu caché de 48 combinaciones, es probable que uses las APIs reales menos de 50 veces en toda la vida de la app.</p>
+      </div>
+      <div class="mt-2 p-2.5 rounded-lg" style="background:var(--wd);border:1px solid rgba(255,215,64,.15)">
+        <p class="text-xs" style="color:var(--fm);line-height:1.5"><i class="fa-solid fa-shield-halved" style="color:var(--wa)"></i> <strong style="color:var(--wa)">Seguridad:</strong> Las API keys se guardan localmente en tu navegador. No se comparten con terceros. Cierra el panel con el botón X para cerrar.</p>
+      </div>
+    </div>
+  </div>
+  <div class="tc" id="tcc" aria-live="polite"></div>
+
+  <script>
+    /* ====== CONFIG ====== */
+    const C={lim:5,su:'vm5u',sk:'vm5k',sc:'vm5c',sp:'vm5p'};
+
+    /* ====== PROVEEDORES ====== */
+    const PV=[
+      {id:'groq',name:'Groq Cloud',url:'https://api.groq.com/openai/v1/chat/completions',model:'llama-3.1-8b-instant',fmt:'oa',hint:'console.groq.com/keys'},
+      {id:'gemini',name:'Google Gemini',url:'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',model:'',fmt:'ge',hint:'aistudio.google.com/apikey'},
+      {id:'openrouter',name:'OpenRouter',url:'https://openrouter.ai/api/v1/chat/completions',model:'meta-llama/llama-3.1-8b-instruct:free',fmt:'oa',hint:'openrouter.ai/keys'},
+      {id:'opencode',name:'OpenCode',url:'',model:'',fmt:'oa',hint:'Pendiente: sin API REST confirmada',disabled:true}
+    ];
+
+    /* ====== PASOS DEL FORMULARIO ====== */
+    const S=[
+      {id:'act',q:'Como se activa el motor?',h:'Si funciona solo al pedalear: "Pedaleo asistido". Si usa acelerador/boton sin pedalear: "Acelerador manual".',o:[
+        {v:'ped',l:'Pedaleo asistido',d:'Motor se activa al pedalear',i:'fa-solid fa-bicycle'},
+        {v:'ace',l:'Acelerador manual o boton',d:'Funciona sin pedalear',i:'fa-solid fa-gauge-high'}
+      ]},
+      {id:'vel',q:'Velocidad maxima de construccion?',h:'Revisa ficha tecnica del fabricante.',o:[
+        {v:'12',l:'Hasta 12 km/h',d:'Velocidad muy baja',i:'fa-solid fa-gauge-simple'},
+        {v:'25',l:'Mas de 12 km/h hasta 25 km/h',d:'Rango tipico VMP',i:'fa-solid fa-gauge'},
+        {v:'+25',l:'Mas de 25 km/h',d:'Supera limite VMP',i:'fa-solid fa-gauge-high'}
+      ]},
+      {id:'pot',q:'Potencia nominal del motor?',h:'En Watts (W). Clave para Bicicleta SPA. R.D. 0016-2026-MTC/18 NO exige limite para VMP.',o:[
+        {v:'350',l:'Hasta 350W',d:'Potencia baja/media',i:'fa-solid fa-bolt'},
+        {v:'+350',l:'Mas de 350W',d:'Potencia alta',i:'fa-solid fa-bolt-lightning'}
+      ]},
+      {id:'pas',q:'Cuantas personas transporta segun diseno?',h:'Diseno original de fabrica. No cuenta si agregas accesorios despues.',o:[
+        {v:'1',l:'Solo 1 persona',d:'Asiento individual',i:'fa-solid fa-person'},
+        {v:'+1',l:'2 o mas personas',d:'Asiento doble/estribos',i:'fa-solid fa-person-bike'}
+      ]}
+    ];
+
+    const st={s:0,a:{},r:null,m:'local',cascade:[]};
+
+    /* ====== ESTADO DE PROVEEDORES ====== */
+    function gP(){
+      try{const d=JSON.parse(localStorage.getItem(C.sp)||'{}');const t=new Date().toDateString();
+        if(d.dt!==t){Object.keys(d).forEach(k=>{if(k!=='dt'&&d[k])d[k].ex=false});d.dt=t}
+        return d;
+      }catch{return{dt:new Date().toDateString()}}
+    }
+    function sP(d){try{localStorage.setItem(C.sp,JSON.stringify(d))}catch{}}
+
+    /* ====== CLASIFICACION LOCAL ====== */
+    function cl(a){
+      if(a.act==='ped'&&a.pot==='350'&&(a.vel==='12'||a.vel==='25'))return br('spa',a);
+      if(a.act==='ped')return br('motorizado',a,'pf');
+      if(a.vel==='+25')return br('motorizado',a,'vf');
+      if(a.pas==='+1')return br('motorizado',a,'xf');
+      if(a.vel==='12')return br('noclasif',a,'bl');
+      if(a.vel==='25')return br('vmp',a);
+      return br('motorizado',a,'fb');
+    }
+    function br(t,a,z){
+      const cls={spa:'Ciclo — Bicicleta con Pedaleo Asistido (SPA)',vmp:'Vehiculo de Movilidad Personal (VMP)',motorizado:'Vehiculo Automotor Electrico (Cat. L)',noclasif:'No clasificado como VMP ni vehiculo automotor'};
+      const ex={spa:`Cumple los 3 requisitos para Bicicleta SPA (DS N.° 019-2018-MTC, DS N.° 012-2020-MTC): potencia <=350W, traccion asistida por pedaleo, velocidad <=25 km/h. "No constituye vehiculo automotor ni vehiculo electrico". No requiere Placa, SOAT ni Brevete. Puede circular por ciclovias. Casco obligatorio.`,
+        vmp:`Cumple criterios de R.D. N.° 0016-2026-MTC/18: motor electrico, velocidad >12 km/h y <=25 km/h, 1 persona. "No forma parte de la clasificacion vehicular del Anexo I del RNV". No se inmatricula ante SUNARP. No requiere Placa, SOAT ni Brevete. Puede circular por ciclovias segun directrices MTC.`,
+        motorizado:exM(a,z),noclasif:`Segun R.D. N.° 0016-2026-MTC/18, el VMP exige velocidad "mayor a 12 km/h". Tu vehiculo no supera este umbral ni cumple criterios para Cat. L. Caso no regulado. Consulta al MTC.`};
+      return{t,cls:cls[t],pl:t==='motorizado',so:t==='motorizado',br:t==='motorizado',ex:ex[t],cr:bc(t,a,z),ci:gc(t,a,z)};
+    }
+    function exM(a,z){
+      const r={pf:`Tiene pedaleo pero ${a.pot==='+350'&&a.vel==='+25'?'la potencia supera 350W y la velocidad supera 25 km/h':(a.pot==='+350'?'la potencia supera 350W':'la velocidad supera 25 km/h')}: no cumple definicion de Bicicleta SPA. Se clasifica como Vehiculo Automotor Cat. L (Anexo I, RNV).`,
+        vf:`Supera 25 km/h, limite de la R.D. N.° 0016-2026-MTC/18 para VMP. Se clasifica como Vehiculo Automotor Cat. L.`,
+        xf:`Permite >1 persona. R.D. N.° 0016-2026-MTC/18 exige que el VMP "solo permite 1 persona". Se clasifica como Vehiculo Automotor Cat. L.`,
+        fb:`No cumple criterios para SPA ni VMP. Se clasifica como Vehiculo Automotor Cat. L.`};
+      return(r[z]||r.fb)+' Debes inmatricular ante SUNARP (R. N.° 039-2013-SUNARP/SN), obtener Placa, SOAT y Brevete B2. PROHIBIDO circular por ciclovia — debes usar la calzada.';
+    }
+
+    /* ====== REGLAS CIRCULACION ====== */
+    function gc(t){
+      if(t==='spa')return[
+        {v:'Ciclovia / ciclocarril',p:true,i:'fa-solid fa-road',d:'Uso permitido y preferente. La Bicicleta SPA es un "ciclo" (DS N.° 012-2020-MTC).'},
+        {v:'Calzada (pista)',p:true,i:'fa-solid fa-road-barrier',d:'Permitido si no hay ciclovía. Carril derecho, casco obligatorio.'},
+        {v:'Acera / vereda',p:false,i:'fa-solid fa-person-walking',d:'PROHIBIDO. Espacio exclusivo de peatones.'}
+      ];
+      if(t==='vmp')return[
+        {v:'Ciclovia / ciclocarril',p:true,i:'fa-solid fa-road',d:'Permitido segun directrices MTC. Respeta velocidad y prioridad de ciclistas.'},
+        {v:'Calzada (pista)',p:true,i:'fa-solid fa-road-barrier',d:'Permitido. Carril derecho, junto al cordon.'},
+        {v:'Acera / vereda',p:false,i:'fa-solid fa-person-walking',d:'PROHIBIDO. Espacio exclusivo peatones.'}
+      ];
+      if(t==='noclasif')return[
+        {v:'Ciclovia / ciclocarril',p:null,i:'fa-solid fa-road',d:'No alcanza 12 km/h minimo para VMP. Se recomienda NO usar ciclovía. Consulta MTC.'},
+        {v:'Calzada (pista)',p:null,i:'fa-solid fa-road-barrier',d:'Caso dudoso. Podria generar confusion. Consulta MTC.'},
+        {v:'Acera / vereda',p:false,i:'fa-solid fa-person-walking',d:'PROHIBIDO en cualquier caso.'}
+      ];
+      return[
+        {v:'Ciclovia / ciclocarril',p:false,i:'fa-solid fa-ban',d:'ESTRICTAMENTE PROHIBIDO. Ciclovías exclusivas para bicicletas y VMP. Vehiculos Cat. L1+ deben usar la calzada. Infraccion sancionable por PNP.'},
+        {v:'Calzada (pista)',p:true,i:'fa-solid fa-check-circle',d:'OBLIGATORIO. Placa visible, SOAT vigente, Brevete B2.'},
+        {v:'Acera / vereda',p:false,i:'fa-solid fa-ban',d:'PROHIBIDO. Espacio exclusivo peatones.'}
+      ];
+    }
+
+    /* ====== CRITERIOS ====== */
+    function bc(t,a,z){
+      const c=[];
+      if(a.act==='ped'){c.push({n:'Pedaleo asistido',vl:'Si',s:t==='spa'?'p':(z==='pf'?'f':'i'),d:t==='spa'?'Cumple: motor al pedalear':'Tiene pedaleo pero falla otro criterio'})}
+      else{c.push({n:'Pedaleo asistido',vl:'No (acelerador)',s:'n',d:'No es bicicleta SPA'})}
+      const vm={'12':'Hasta 12 km/h','25':'12-25 km/h','+25':'+25 km/h'};
+      if(a.vel==='12')c.push({n:'Velocidad maxima',vl:vm[a.vel],s:t==='noclasif'?'f':(t==='spa'?'p':'n'),d:t==='noclasif'?'No alcanza 12 km/h minimo para VMP':'Dentro del rango'});
+      else if(a.vel==='25')c.push({n:'Velocidad maxima',vl:vm[a.vel],s:(t==='spa'||t==='vmp')?'p':'n',d:(t==='spa'||t==='vmp')?'Dentro del rango SPA/VMP':'Dentro del rango pero falla otro criterio'});
+      else c.push({n:'Velocidad maxima',vl:vm[a.vel],s:'f',d:'Supera 25 km/h para VMP y SPA'});
+      const pm={'350':'Hasta 350W','+350':'+350W'};
+      if(a.act==='ped')c.push({n:'Potencia',vl:pm[a.pot],s:a.pot==='350'?'p':'f',d:a.pot==='350'?'Cumple 350W para SPA':'Supera 350W — no es Bicicleta SPA'});
+      else c.push({n:'Potencia',vl:pm[a.pot],s:'i',d:'R.D. 0016-2026-MTC/18 no fija limite de potencia para VMP'});
+      const pa={'1':'1 persona','+1':'2+ personas'};
+      if(t==='vmp')c.push({n:'Pasajeros',vl:pa[a.pas],s:'p',d:'Cumple: solo 1 persona'});
+      else if(t==='motorizado'&&z==='xf')c.push({n:'Pasajeros',vl:pa[a.pas],s:'f',d:'Supera 1 persona — no es VMP'});
+      else c.push({n:'Pasajeros',vl:pa[a.pas],s:'n',d:t==='noclasif'?'Cumple pero falla en velocidad':'No es criterio determinante aqui'});
+      return c;
+    }
+
+    /* ====== CACHE ====== */
+    function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas}
+    function gC(){try{return JSON.parse(localStorage.getItem(C.sc)||'{}')}catch{return{}}}
+    function sC(k,d){const c=gC();c[k]=d;try{localStorage.setItem(C.sc,JSON.stringify(c))}catch{}}
+
+    /* ====== DETECCION DE AGOTAMIENTO ====== */
+    function isExh(e){
+      if(!e)return false;
+      const m=e.message||'';
+      return e.status===429||/rate.?limit|insufficient.?quota|credit|exceeded|agotad/i.test(m);
+    }
+
+    /* ====== LLAMADAS API ====== */
+    async function cOA(p,a){
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const h={'Authorization':`Bearer ${p.key}`,'Content-Type':'application/json'};
+      if(p.id==='openrouter'){h['HTTP-Referer']='https://verificamoto.pe';h['X-Title']='VerificaMoto PE'}
+      const r=await fetch(p.url,{method:'POST',headers:h,body:JSON.stringify({model:p.model,messages:[{role:'user',content:prompt}],max_tokens:280,temperature:0})});
+      if(!r.ok)throw{status:r.status,message:await r.text().catch(()=>'')};
+      const d=await r.json();const m=d.choices?.[0]?.message?.content?.match(/\{[\s\S]*\}/);
+      if(!m)throw{status:r.status,message:'Sin JSON en respuesta'};
+      return JSON.parse(m[0]);
+    }
+    async function cGe(p,a){
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const r=await fetch(`${p.url}?key=${p.key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:280,temperature:0}})});
+      if(!r.ok)throw{status:r.status,message:await r.text().catch(()=>'')};
+      const d=await r.json();const m=d.candidates?.[0]?.content?.parts?.[0]?.text?.match(/\{[\s\S]*\}/);
+      if(!m)throw{status:r.status,message:'Sin JSON en respuesta'};
+      return JSON.parse(m[0]);
+    }
+    async function cPr(p,a){
+      if(p.fmt==='oa')return cOA(p,a);
+      if(p.fmt==='ge')return cGe(p,a);
+      throw new Error('Formato no soportado');
+    }
+
+    /* ====== CASCADA PRINCIPAL ====== */
+    async function cv(a){
+      const key=ck(a),cache=gC(),ps=gP(),cascade=[];
+      // 1. Cache
+      if(cache[key]){st.m=cache[key]._m||'local';st.cascade=cache[key]._cas||[];const lr=cl(a);return{...lr,ex:cache[key].ex,t:cache[key].t||lr.t}}
+      // 2. Cascada por proveedores activos
+      for(const p of PV){
+        if(p.disabled)continue;
+        const s=ps[p.id];if(!s||!s.a||!s.k)continue;
+        if(s.ex)continue; // saltar agotados
+        try{
+          const ar=await cPr(p,a);
+          sC(key,{...ar,_m:p.id,_cas:[...cascade,{id:p.id,ok:true}]});
+          st.m=p.id;st.cascade=[...cascade,{id:p.id,ok:true}];
+          const lr=cl(a);return{...lr,ex:ar.ex,t:ar.t||lr.t};
+        }catch(e){
+          cascade.push({id:p.id,ok:false});
+          if(isExh(e)){s.ex=true;sP(ps);toast(`${p.name} agotado, intentando siguiente...`,'warning')}
+          else{console.warn(`${p.id}:`,e.message)}
+          continue;
+        }
+      }
+      // 3. Fallback local
+      if(cascade.length>0)st.cascade=[...cascade,{id:'local',ok:true}];
+      st.m='local';
+      return cl(a);
+    }
+
+    /* ====== LIMITE DIARIO ====== */
+    function gU(){try{const d=JSON.parse(localStorage.getItem(C.su)||'{}');const t=new Date().toDateString();return d.date===t?d:{date:t,count:0}}catch{return{date:new Date().toDateString(),count:0}}}
+    function rem(){return Math.max(0,C.lim-gU().count)}
+    function inc(){const d=gU();d.count++;try{localStorage.setItem(C.su,JSON.stringify(d))}catch{}rDots()}
+    function rDots(){const c=document.getElementById('dots'),u=gU().count,r=rem();let h='';for(let i=0;i<C.lim;i++)h+=`<div class="dt ${i<u?'u':''} ${i===C.lim-1&&r===1&&i>=u?'dp':''}"></div>`;c.innerHTML=h}
+
+    /* ====== RENDER SETTINGS ====== */
+    function rSet(){
+      const ps=gP();let h='';
+      PV.forEach(p=>{
+        if(p.disabled){h+=`<div class="pi" style="opacity:.4"><div class="pi-h"><span class="font-medium text-sm flex-1">${p.name}</span><span class="ps off"><i class="fa-solid fa-clock"></i> Pendiente</span></div><p class="text-xs" style="color:var(--fm);opacity:.5">${p.hint}</p></div>`;return}
+        const s=ps[p.id]||{};const hasK=!!s.k;const isEx=s.ex||false;const isA=s.a||false;
+        const stTxt=isEx?'Agotado':(isA?'Activo':(hasK?'Inactivo':'Sin configurar'));
+        const stCls=isEx?'ex':(isA?'ok':'off');
+        const stIco=isEx?'fa-ban':(isA?'fa-circle-check':'fa-circle-minus');
+        h+=`<div class="pi">
+          <div class="pi-h">
+            <input type="checkbox" class="tg" ${isA?'checked':''} onchange="togP('${p.id}',this.checked)" aria-label="Activar ${p.name}">
+            <span class="font-medium text-sm flex-1">${p.name}</span>
+            <span class="ps ${stCls}"><i class="fa-solid ${stIco}"></i> ${stTxt}</span>
+          </div>
+          <input type="password" class="if mb-1" placeholder="API Key..." value="${s.k||''}" oninput="updK('${p.id}',this.value)" ${!isA&&!hasK?'style="opacity:.4"':''}>
+          <p class="text-xs" style="color:var(--fm);opacity:.5">${p.hint}</p>
+        </div>`;
+      });
+      document.getElementById('prov-list').innerHTML=h;
+    }
+    function togP(id,v){const ps=gP();if(!ps[id])ps[id]={};ps[id].a=v;sP(ps)}
+    function updK(id,v){
+      const ps=gP();if(!ps[id])ps[id]={};
+      // Validacion basica de formato
+      if(v&&v.length>5){
+        const valid={groq:/^gsk_/i,openrouter:/^sk-or-/i};
+        if(valid[id]&&!valid[id].test(v)){
+          toast(`Formato de API key invalido para ${id}`,'warning');
+        }
+      }
+      ps[id].k=v;sP(ps)
+    }
+    function resetExh(){const ps=gP();Object.keys(ps).forEach(k=>{if(k!=='dt'&&ps[k])ps[k].ex=false});sP(ps);rSet();toast('Proveedores restablecidos','success')}
+
+    async function testAll(){
+      const ps=gP();let tested=0,passed=0;
+      for(const p of PV){
+        if(p.disabled)continue;const s=ps[p.id];if(!s||!s.a||!s.k)continue;
+        tested++;
+        try{
+          await cPr(p,{act:'ace',vel:'25',pot:'350',pas:'1'});
+          passed++;s.ex=false;
+        }catch(e){if(isExh(e)){s.ex=true}else{console.warn(`${p.id}:`,e.message)}}
+      }
+      sP(ps);rSet();
+      if(!tested)toast('No hay proveedores activos con API key','error');
+      else if(passed===tested)toast(`${passed}/${tested} APIs funcionan correctamente`,'success');
+      else toast(`${passed}/${tested} funcionan, ${tested-passed} agotadas`,'warning');
+    }
+
+    /* ====== TOGGLE SETTINGS ====== */
+    function tgS(){const o=document.getElementById('sov');o.classList.toggle('open');if(o.classList.contains('open'))rSet()}
+
+    /* ====== RENDER WIZARD ====== */
+    function rWiz(){
+      const m=document.getElementById('mc');
+      if(gU().count>=C.lim){rLim(m);return}
+      let sh='';
+      S.forEach((s,i)=>{
+        const dir=i<st.s?'l':(i>st.s?'r':'a'),sel=st.a[s.id];
+        sh+=`<div class="sp ${dir}" data-step="${i}" style="min-height:310px"><div class="w-full max-w-md mx-auto">
+          <p class="text-xs font-bold mb-3 tracking-wider" style="color:var(--ac);font-family:'Orbitron',monospace">PASO ${i+1}/${S.length}</p>
+          <h2 class="text-base sm:text-lg font-bold mb-4 leading-tight">${s.q}</h2>
+          <div class="og mb-3">${s.o.map(o=>`<div class="oc ${sel===o.v?'s':''}" onclick="selO('${s.id}','${o.v}',${i},event)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')selO('${s.id}','${o.v}',${i},event)" aria-pressed="${sel===o.v}"><div class="iw"><i class="${o.i}"></i></div><div class="ot">${o.l}</div><div class="od">${o.d}</div></div>`).join('')}</div>
+          <div class="it"><i class="fa-solid fa-circle-info" style="color:var(--ac);margin-top:1px;flex-shrink:0"></i><span>${s.h}</span></div>
+        </div></div>`;
+      });
+      let ih='';S.forEach((_,i)=>{let c=i<st.s?'d':(i===st.s?'a':'');ih+=`<div class="sd ${c}">${i<st.s?'<i class="fa-solid fa-check" style="font-size:.6rem"></i>':(i+1)}</div>`});
+      m.innerHTML=`<div><div class="pt mb-3"><div class="pf" style="width:${(st.s/S.length)*100}%"></div></div><div class="si mb-4">${ih}</div><div class="sv" style="min-height:330px">${sh}</div><div class="flex justify-between items-center mt-3 max-w-md mx-auto"><button class="bg" onclick="prv()" ${st.s===0?'style="visibility:hidden"':''}><i class="fa-solid fa-arrow-left"></i> Anterior</button><button class="bp text-sm" id="bn" onclick="nxt()" ${!st.a[S[st.s].id]?'disabled':''}>${st.s===S.length-1?'<i class="fa-solid fa-magnifying-glass"></i> Verificar':'Siguiente <i class="fa-solid fa-arrow-right"></i>'}</button></div></div>`;
+    }
+
+    function rLim(c){
+      const tmr=new Date();tmr.setDate(tmr.getDate()+1);tmr.setHours(0,0,0,0);const hl=Math.max(1,Math.ceil((tmr-new Date())/36e5));
+      c.innerHTML=`<div class="text-center py-12" style="animation:ri .45s ease forwards"><div class="li mb-3"><i class="fa-solid fa-hourglass-end"></i></div><h2 class="text-lg font-bold mb-2">Limite diario alcanzado</h2><p class="text-sm mb-5" style="color:var(--fm);max-width:300px;margin:0 auto;line-height:1.55">Usaste tus ${C.lim} consultas de hoy. Podras consultar en ~<strong style="color:var(--fg)">${hl}h</strong>.</p><div class="p-3 rounded-xl mb-5" style="background:var(--ad);border:1px solid var(--bd);max-width:320px;margin:0 auto"><p class="text-xs" style="color:var(--fm);line-height:1.5"><i class="fa-solid fa-lightbulb" style="color:var(--ac)"></i> Configura APIs gratuitas en <button onclick="tgS()" style="color:var(--ac);text-decoration:underline;background:none;border:none;cursor:pointer;font:inherit">Config</button> para acceso ilimitado.</p></div><button onclick="rst()" class="bg"><i class="fa-solid fa-rotate-right"></i> Volver</button></div>`;
+    }
+
+    /* ====== RENDER RESULTADO ====== */
+    function rRes(r){
+      const m=document.getElementById('mc');
+      const rq=[{l:'Placa (SUNARP)',r:r.pl,i:'fa-solid fa-id-card'},{l:'SOAT',r:r.so,i:'fa-solid fa-shield-halved'},{l:'Brevete B2',r:r.br,i:'fa-solid fa-address-card'}];
+      const cpb=r.ci.find(c=>c.v.includes('Ciclovia')&&c.p===false);
+      const ic={p:'fa-check',f:'fa-xmark',n:'fa-minus',i:'fa-info-circle'};
+      const sc={p:'cp',f:'cf',n:'cn',i:'ci'};
+
+      // Badge de cascada
+      let cascadBadge='';
+      if(st.cascade.length>0){
+        const names={groq:'Groq',gemini:'Gemini',openrouter:'OpenRouter',local:'Logica local'};
+        const failed=st.cascade.filter(c=>!c.ok).map(c=>names[c.id]||c.id);
+        if(failed.length>0)cascadBadge=`<div class="mb-3 p-2.5 rounded-lg flex items-start gap-2.5" style="background:var(--wd);border:1px solid rgba(255,215,64,.12)"><i class="fa-solid fa-arrows-rotate" style="color:var(--wa);margin-top:1px;flex-shrink:0"></i><p class="text-xs" style="color:var(--fg);line-height:1.5"><strong>Cascada:</strong> ${st.cascade.map(c=>`<span style="color:${c.ok?'var(--ac)':'var(--da)'}">${names[c.id]||c.id}${c.ok?' ✓':' ✗'}</span>`).join(' → ')}</p></div>`;
+        else{const used=names[st.cascade[st.cascade.length-1].id]||'Local';cascadBadge=`<div class="mb-3 text-center"><span class="mb" style="color:var(--ac)"><i class="fa-solid fa-bolt"></i> Resuelto con ${used}</span></div>`;}
+      } else if(st.m==='local'){cascadBadge=`<div class="mb-3 text-center"><span class="mb" style="color:var(--ne)"><i class="fa-solid fa-code"></i> Logica local (sin API)</span></div>`;}
+
+      m.innerHTML=`<div class="rp">
+        ${cascadBadge}
+        <div class="text-center mb-4"><div class="rb ${r.t}"><i class="fa-solid ${r.t==='spa'||r.t==='vmp'?'fa-circle-check':(r.t==='motorizado'?'fa-triangle-exclamation':'fa-circle-question')}"></i>${r.cls.toUpperCase()}</div></div>
+        <div class="space-y-1.5 mb-4">${rq.map(q=>`<div class="rr"><div class="ri2 ${q.r?'y':(r.t==='noclasif'?'w':'n')}"><i class="${q.i}"></i></div><div class="flex-1"><div class="font-medium text-sm">${q.l}</div><div class="text-xs" style="color:var(--fm)">${q.r?'<span style="color:var(--wa)">Requerido</span> — SUNARP':(r.t==='noclasif'?'<span style="color:var(--ne)">No aplica</span>':'<span style="color:var(--ac)">No requerido</span> — Exento')}</div></div><div class="text-base">${q.r?'<i class="fa-solid fa-circle-exclamation" style="color:var(--wa)"></i>':(r.t==='noclasif'?'<i class="fa-solid fa-circle-question" style="color:var(--ne)"></i>':'<i class="fa-solid fa-circle-check" style="color:var(--ac)"></i>')}</div></div>`).join('')}</div>
+        <div class="mb-4">
+          <p class="text-xs font-bold mb-2.5 tracking-wider" style="color:var(--ac);font-family:'Orbitron',monospace">DONDE PUEDES CIRCULAR</p>
+          <div class="space-y-1.5">${r.ci.map(c=>{const nl=c.p===null;const cl2=nl?'ca':(c.p?'ok':'no');const lt=nl?'CONSULTAR':(c.p?'PERMITIDO':'PROHIBIDO');const ix=nl?'fa-question':(c.p?'fa-check':'fa-xmark');const ic2=nl?'ca':(c.p?'ok':'no');return`<div class="cvr"><div class="ci3 ${ic2}"><i class="${c.i}"></i></div><div class="flex-1"><div class="flex items-center gap-2"><span class="font-medium text-sm">${c.v}</span><span class="vl ${cl2}" style="font-size:.68rem">${lt}</span></div><div class="text-xs mt-0.5" style="color:var(--fm);line-height:1.45">${c.d}</div></div><div style="flex-shrink:0"><i class="fa-solid ${ix}" style="color:${nl?'var(--wa)':(c.p?'var(--ac)':'var(--da)')};font-size:1rem"></i></div></div>`}).join('')}</div>
+          ${cpb?`<div class="wb"><i class="fa-solid fa-triangle-exclamation"></i><p class="text-xs" style="color:var(--fg);line-height:1.55"><strong>Circular en ciclovía es infraccion.</strong> Las ciclovías son exclusivas para bicicletas y VMP. Vehiculos Cat. L1+ deben circular por la calzada con Placa, SOAT y Brevete. La PNP puede multar e internar tu vehiculo.</p></div>`:''}
+        </div>
+        <div class="cb ${r.t}"><p class="cl ${r.t}">EXPLICACION LEGAL</p><p class="ct">${r.ex}</p></div>
+        <details class="mb-4" style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden"><summary class="px-3 py-2.5 cursor-pointer text-sm font-medium flex items-center gap-2" style="background:rgba(255,255,255,.015)"><i class="fa-solid fa-list-check" style="color:var(--ac)"></i>Desglose de criterios</summary><div class="px-3 py-2">${r.cr.map(c=>`<div class="cr"><i class="fa-solid ${ic[c.s]} ${sc[c.s]}" style="width:14px;text-align:center;margin-top:2px;flex-shrink:0;font-size:.7rem"></i><div class="flex-1"><span class="text-sm font-medium">${c.n}</span><span class="text-xs ml-1.5" style="color:var(--fm)">${c.vl}</span><div class="text-xs mt-0.5" style="color:var(--fm);opacity:.75">${c.d}</div></div></div>`).join('')}</div></details>
+        <div class="p-2.5 rounded-lg mb-4 flex items-start gap-2.5" style="background:rgba(255,110,64,.06);border:1px solid rgba(255,110,64,.12)"><i class="fa-solid fa-gavel" style="color:var(--da);margin-top:1px"></i><p class="text-xs" style="color:var(--fm);line-height:1.55">Desde <strong style="color:var(--da)">agosto 2026</strong>, la PNP sanciona: <strong style="color:var(--da)">S/ 660</strong> primera vez, <strong style="color:var(--da)">S/ 1,320</strong> reincidencia. Incluye circular en ciclovía con vehiculos no autorizados.</p></div>
+        <div class="flex flex-col sm:flex-row gap-2.5 mb-3"><button onclick="cpR()" class="bg flex-1 justify-center flex items-center gap-2 text-sm"><i class="fa-regular fa-copy"></i> Copiar</button><button onclick="rst()" class="bp flex-1 justify-center text-sm"><i class="fa-solid fa-rotate-right"></i> Nueva consulta</button></div>
+        <div class="text-center"><span class="mb"><i class="fa-solid fa-code"></i> Logica local</span></div>
+      </div>`;
+    }
+
+    /* ====== NAVEGACION ====== */
+    function selO(sid,val,si,ev){st.a[sid]=val;const p=document.querySelector(`.sp[data-step="${si}"]`);if(p){p.querySelectorAll('.oc').forEach(c=>{c.classList.remove('s');c.setAttribute('aria-pressed','false')});ev.currentTarget.classList.add('s');ev.currentTarget.setAttribute('aria-pressed','true')}const b=document.getElementById('bn');if(b)b.disabled=false;if(si<S.length-1)setTimeout(nxt,280)}
+    function nxt(){if(!st.a[S[st.s].id])return;if(st.s<S.length-1){st.s++;rWiz()}else sub()}
+    function prv(){if(st.s>0){st.s--;rWiz()}}
+    async function sub(){
+      const m=document.getElementById('mc');
+      m.innerHTML=`<div class="text-center py-14" style="animation:ri .35s ease forwards"><div class="inline-block mb-3" style="width:42px;height:42px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .7s linear infinite"></div><p class="text-sm" style="color:var(--fm)">Verificando...</p></div>`;
+      if(!document.getElementById('ss')){const s=document.createElement('style');s.id='ss';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s)}
+      try{const r=await cv(st.a);st.r=r;inc();rRes(r)}catch(e){const r=cl(st.a);st.r=r;st.m='local';st.cascade=[];inc();rRes(r);toast('Error en consulta, se uso logica local','error')}
+    }
+    function rst(){st.s=0;st.a={};st.r=null;st.m='local';st.cascade=[];rWiz()}
+
+    /* ====== COPIAR ====== */
+    function cpR(){if(!st.r)return;const r=st.r;const ct=r.ci.map(c=>`${c.v}: ${c.p===null?'CONSULTAR':(c.p?'PERMITIDO':'PROHIBIDO')} — ${c.d}`).join('\n');
+      navigator.clipboard.writeText(`VERIFICAMOTO PE\n${'='.repeat(35)}\nClasificacion: ${r.cls}\nPlaca: ${r.pl?'REQUERIDA':'No requerida'}\nSOAT: ${r.so?'REQUERIDO':'No requerido'}\nBrevete: ${r.br?'REQUERIDO':'No requerido'}\n\nCIRCULACION:\n${ct}\n\n${r.ex}\n\nR.D. 0016-2026-MTC/18 | DS 019-2018-MTC | DS 012-2020-MTC | DS 058-2003-MTC | R. 039-2013-SUNARP/SN | DS 016-2009-MTC`).then(()=>toast('Copiado','success')).catch(()=>toast('No se pudo copiar','error'))}
+
+    /* ====== TOASTS ====== */
+    function toast(msg,t='info'){const c=document.getElementById('tcc'),ic={info:'fa-circle-info',success:'fa-circle-check',error:'fa-circle-exclamation',warning:'fa-triangle-exclamation'};const e=document.createElement('div');e.className=`tt ${t}`;e.innerHTML=`<i class="fa-solid ${ic[t]}"></i><span>${msg}</span>`;c.appendChild(e);setTimeout(()=>{e.classList.add('x');setTimeout(()=>e.remove(),250)},3500)}
+
+    /* ====== PARTICULAS ====== */
+    function iPt(){const cv=document.getElementById('pc'),cx=cv.getContext('2d');let ps=[];for(let i=0;i<18;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*cv.height,sz:Math.random()*1.2+.3,sy:-(Math.random()*.2+.04),sx:(Math.random()-.5)*.1,op:Math.random()*.2+.04,p:Math.random()*6.28});
+      function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();addEventListener('resize',rs);
+      (function f(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.y+=p.sy;p.x+=p.sx;p.p+=.015;const o=p.op*(.6+.4*Math.sin(p.p));if(p.y<-8){p.y=cv.height+8;p.x=Math.random()*cv.width}cx.beginPath();cx.arc(p.x,p.y,Math.max(.1,p.sz),0,6.28);cx.fillStyle=`rgba(0,230,118,${o})`;cx.fill()});requestAnimationFrame(f)})()}
+
+    /* ====== INIT ====== */
+    document.addEventListener('DOMContentLoaded',()=>{rDots();rWiz();iPt()});
+  </script>
+</body>
+</html>
