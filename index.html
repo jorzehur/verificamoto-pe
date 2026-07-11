@@ -84,7 +84,7 @@
     <main class="flex-1 flex flex-col items-center justify-start px-4 py-5">
       <div class="max-w-lg w-full text-center mb-4">
         <h1 class="text-lg sm:text-xl font-bold mb-1.5" style="font-family:'Orbitron',monospace">Tu vehiculo electrico, <span style="color:var(--ac)">legal o no</span>?</h1>
-        <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 7 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular.</p>
+        <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 6 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular.</p>
       </div>
       <div class="max-w-lg w-full" id="mc"></div>
     </main>
@@ -152,11 +152,6 @@
       {id:'pes',q:'Peso total del vehiculo?',h:'Incluye bateria. Revisa ficha tecnica o pesa en balanza.',o:[
         {v:'120',l:'Hasta 120 kg',d:'Vehiculo ligero',i:'fa-solid fa-weight-hanging'},
         {v:'+120',l:'Mas de 120 kg',d:'Vehiculo pesado',i:'fa-solid fa-truck-monster'}
-      ]},
-      {id:'age',q:'Edad del conductor?',h:'Edad real del conductor al momento de usar el vehiculo.',o:[
-        {v:'-12',l:'Menor de 12 anos',d:'Sin licencia',i:'fa-solid fa-child'},
-        {v:'12-15',l:'12 a 15 anos',d:'Sin licencia formal',i:'fa-solid fa-user-graduate'},
-        {v:'16+',l:'16 o mas anos',d:'Puede obtener licencia',i:'fa-solid fa-id-card'}
       ]},
       {id:'noc',q:'Lo usara de noche?',h:'Condiciones de iluminacion y visibilidad.',o:[
         {v:'si',l:'Si, de noche',d:'Requiere luces',i:'fa-solid fa-moon'},
@@ -260,11 +255,6 @@
       if(z==='wp')c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'f',d:'Supera 120 kg — no es VMP ni SPA'});
       else if(t==='spa'||t==='vmp')c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'p',d:'Dentro del limite permitido'});
       else c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'i',d:'No es criterio determinante para esta clasificacion'});
-      // Edad del conductor
-      const ed={'-12':'Menor de 12 anos','12-15':'12-15 anos','16+':'16+ anos'};
-      if(a.age==='-12')c.push({n:'Edad del conductor',vl:ed[a.age],s:t==='noclasif'?'f':'n',d:'No puede obtener licencia. Solo SPA/VMP sin licencia.'});
-      else if(a.age==='12-15')c.push({n:'Edad del conductor',vl:ed[a.age],s:'n',d:'Sin licencia formal. Puede usar SPA/VMP con supervision.'});
-      else c.push({n:'Edad del conductor',vl:ed[a.age],s:'p',d:'Puede obtener licencia B2 si es motorizado'});
       // Uso nocturno
       if(a.noc==='si')c.push({n:'Uso nocturno',vl:'Si',s:(t==='spa'||t==='vmp')?'p':'n',d:(t==='spa'||t==='vmp')?'Requiere luces delanteras y traseras':'Requiere luces, reflectantes y equipo completo'});
       else c.push({n:'Uso nocturno',vl:'No',s:'p',d:'Sin requisitos nocturnos'});
@@ -272,7 +262,7 @@
     }
 
     /* ====== CACHE ====== */
-    function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas+'-'+a.pes+'-'+a.age+'-'+a.noc}
+    function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas+'-'+a.pes+'-'+a.noc}
     function gC(){try{return JSON.parse(localStorage.getItem(C.sc)||'{}')}catch{return{}}}
     function sC(k,d){const c=gC();c[k]=d;try{localStorage.setItem(C.sc,JSON.stringify(c))}catch{}}
 
@@ -285,7 +275,7 @@
 
     /* ====== LLAMADAS API ====== */
     async function cOA(p,a){
-      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Edad:${a.age}. Nocturno:${a.noc==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Nocturno:${a.noc==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
       const h={'Authorization':`Bearer ${p.key}`,'Content-Type':'application/json'};
       if(p.id==='openrouter'){h['HTTP-Referer']='https://verificamoto.pe';h['X-Title']='VerificaMoto PE'}
       const r=await fetch(p.url,{method:'POST',headers:h,body:JSON.stringify({model:p.model,messages:[{role:'user',content:prompt}],max_tokens:280,temperature:0})});
@@ -295,7 +285,7 @@
       return JSON.parse(m[0]);
     }
     async function cGe(p,a){
-      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Edad:${a.age}. Nocturno:${a.noc==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Nocturno:${a.noc==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
       const r=await fetch(`${p.url}?key=${p.key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:280,temperature:0}})});
       if(!r.ok)throw{status:r.status,message:await r.text().catch(()=>'')};
       const d=await r.json();const m=d.candidates?.[0]?.content?.parts?.[0]?.text?.match(/\{[\s\S]*\}/);
@@ -390,7 +380,7 @@
         if(p.disabled)continue;const s=ps[p.id];if(!s||!s.a||!s.k)continue;
         tested++;
         try{
-          await cPr(p,{act:'ace',vel:'25',pot:'350',pas:'1',pes:'120',age:'16+',noc:'no'});
+          await cPr(p,{act:'ace',vel:'25',pot:'350',pas:'1',pes:'120',noc:'no'});
           passed++;s.ex=false;
         }catch(e){if(isExh(e)){s.ex=true}else{console.warn(`${p.id}:`,e.message)}}
       }
