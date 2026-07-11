@@ -29,9 +29,9 @@ El cuestionario consta de 6 preguntas que definen las características físicas 
    * **Hasta 120 kg (`120`):** Límite máximo de peso para VMP y SPA.
    * **Más de 120 kg (`+120`):** Vehículos pesados o de carga.
 
-6. **Uso nocturno del vehículo (`noc`):**
-   * **Sí (`si`):** Se usará de noche o bajo condiciones de baja visibilidad.
-   * **No (`no`):** Solo se usará de día.
+6. **Kit de visibilidad permanente del vehículo (`vis`):**
+   * **Sí (`si`):** Cuenta con luz delantera, luz de freno posterior y láminas/cintas retrorreflectantes laterales de fábrica.
+   * **No (`no`):** No dispone del kit de visibilidad permanente (obligatorio por ley para VMP, SPA y motos, tanto de día como de noche).
 
 ---
 
@@ -50,7 +50,7 @@ El sistema clasifica el vehículo en una de cuatro categorías según las respue
   * **EXENTO** de Placa (SUNARP), SOAT y Brevete (Licencia).
   * **Permitido circular en:** Ciclovías y calzadas (carril derecho).
   * **Prohibido circular en:** Aceras/veredas.
-  * **Obligatorio:** Casco y luces en caso de uso nocturno.
+  * **Obligatorio:** Casco y kit de visibilidad permanente (luz delantera, luz de freno posterior y láminas retrorreflectantes laterales).
 
 ### B. Vehículo de Movilidad Personal (VMP)
 * **Requisitos para clasificar como VMP:**
@@ -63,7 +63,7 @@ El sistema clasifica el vehículo en una de cuatro categorías según las respue
   * **EXENTO** de inmatriculación en SUNARP, Placa, SOAT y Brevete.
   * **Permitido circular en:** Ciclovías y calzadas (carril derecho, junto al cordón de la acera).
   * **Prohibido circular en:** Aceras/veredas y vías expresas.
-  * **Obligatorio:** Luces para uso nocturno.
+  * **Obligatorio:** Kit de visibilidad permanente: luz delantera, luz de freno posterior y láminas retrorreflectantes laterales (día y noche).
 
 ### C. Vehículo Automotor Eléctrico (Categoría L)
 * **Condiciones que fuerzan la clasificación como Vehículo Automotor (Cat. L1, L2, L3, etc.):**
@@ -76,6 +76,7 @@ El sistema clasifica el vehículo en una de cuatro categorías según las respue
   * **OBLIGATORIO:** Inscripción en SUNARP, Placa de rodaje física, SOAT vigente y Brevete de Categoría B2 (B-IIa mínimo para bicimotos).
   * **Permitido circular en:** Calzada (pista).
   * **ESTRICTAMENTE PROHIBIDO:** Circular por ciclovías y aceras/veredas.
+  * **Aditamentos obligatorios de fábrica:** Casco de seguridad homologado (número de placa grabado/impreso), chaleco o chaqueta retrorreflectiva, luz delantera encendida permanentemente (inclusive de día), dos espejos retrovisores laterales, luces direccionales intermitentes (delanteras y traseras) y bocina o corneta eléctrica.
 
 ### D. No Clasificado
 * **Requisitos:** Velocidad máxima de fábrica de 12 km/h o menos (`12`) operado por acelerador.
@@ -112,5 +113,7 @@ A partir del **2 de agosto de 2026**, las autoridades peruanas aplicarán multas
 | **Circular sin placa de rodaje** | Infracción | **S/ 660** (12% UIT) | Obligatorio para todos los vehículos motorizados de Categoría L. |
 | **Circular sin SOAT vigente** | Infracción | **S/ 660** (12% UIT) | Obligatorio para todos los vehículos motorizados de Categoría L. |
 | **Conducir sin licencia correspondiente** | Infracción | **S/ 2,750** (50% UIT) | Se requiere Licencia de conducir clase B (mínimo B-IIa) para vehículos Categoría L. |
+| **Circular sin casco reglamentario o prendas reflectantes** | Infracción E1 (Leve) | **S/ 220** | Falta de equipo de seguridad obligatorio (casco homologado y chaleco/j Chaqueta retrorreflectivo) para Categoría L. |
+| **Invasión de ciclovías vulnerando derecho preferente (Cat. L)** | Infracción M43 | **S/ 660** (12% UIT) | Motos eléctricas (Cat. L) prohibidas en ciclovías; vulnera la preferencia de ciclistas/VMP. |
 
 *Nota: El valor de las sanciones está calculado con base en la UIT (Unidad Impositiva Tributaria). La suma de infracciones concurrentes puede provocar la retención e internamiento del vehículo en el depósito municipal.*
