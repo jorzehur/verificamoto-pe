@@ -62,9 +62,23 @@
     @media(max-width:640px){.oc{max-width:100%;padding:.9rem .7rem}.sdr{width:100%}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}.sp{transition:none}}
     ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
-  </style>
+    /* Skip link */
+    .sk{position:absolute;top:-100px;left:8px;padding:.5rem 1rem;background:var(--ac);color:var(--bg);border-radius:0 0 8px 8px;font-weight:700;font-size:.8rem;z-index:999;transition:top .2s}.sk:focus{top:0;outline:3px solid var(--in)}
+    /* Presets */
+    .pg{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:1.2rem}.pc{padding:.55rem .8rem;border-radius:9px;background:var(--bc);border:1.5px solid var(--bd);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:.5rem;font-size:.75rem;font-family:'DM Sans',sans-serif;color:var(--fg);font-weight:500;text-align:left;min-width:0;flex:1 1 140px;max-width:200px}.pc:hover{background:var(--bh);border-color:var(--ac);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,230,118,.05)}.pc .pi2{width:26px;height:26px;border-radius:7px;background:var(--ad);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ac);font-size:.7rem}.pc .pd{font-size:.63rem;color:var(--fm);line-height:1.2;margin-top:1px}
+    /* Onboarding */
+    .ob{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:1rem;animation:fi .35s ease forwards}@keyframes fi{from{opacity:0}to{opacity:1}}.ob-c{max-width:380px;width:100%;background:#0a1a10;border:1px solid var(--bd);border-radius:16px;padding:1.5rem}.ob-c h2{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700}.ob-c p{color:var(--fm);font-size:.78rem;line-height:1.6;margin:.6rem 0}.ob-c label{display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--fm);cursor:pointer}
+    /* History */
+    .he{max-height:220px;overflow-y:auto;margin-top:.5rem}.he::-webkit-scrollbar{width:3px}.hi{display:flex;align-items:center;justify-content:space-between;padding:.4rem .5rem;border-bottom:1px solid rgba(255,255,255,.03);font-size:.7rem;color:var(--fm);gap:.4rem}.hi:last-child{border-bottom:0}.hi .hb{display:flex;align-items:center;gap:.4rem;min-width:0;flex:1}.hi .ht{width:6px;height:6px;border-radius:50%;flex-shrink:0}.hi .ht.g{background:var(--ac)}.hi .ht.b{background:var(--in)}.hi .ht.y{background:var(--wa)}.hi .ht.gy{background:var(--ne)}
+    /* Step visual accent */
+    .sv .sp .ss{width:100%;max-width:320px;margin:0 auto .75rem;display:flex;align-items:center;gap:.6rem}.sv .sp .ss .si2{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0}.sv .sp .ss .st2{font-size:.6rem;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+    /* Print */
+    @media print{body{background:#fff!important;color:#000!important}canvas,.gl,.hd,.so,.tc,.ft,#pc,.rr .ri2{display:none!important}.sh{min-height:auto}.sh main{padding:0!important}.rp{animation:none!important}.oc,.cvr,.cb{break-inside:avoid}.oc.s{border-color:#000}.rb{border:1px solid #000!important;background:#eee!important;color:#000!important}.cvr{border:1px solid #ccc}.wb{border:1px solid #000!important;background:#ffe0e0!important}.cb{border:1px solid #000!important;background:#f5f5f5!important}.cb .ct{color:#333!important}.mb-4{margin-bottom:.4rem!important}.text-xs{font-size:8pt!important}.text-sm{font-size:9pt!important}}
+    /* Focus visible */
+    *:focus-visible{outline:2px solid var(--ac);outline-offset:2px}.oc:focus-visible{outline-color:var(--in)}.bp:focus-visible,.bg:focus-visible{outline:2px solid var(--in)}
 </head>
 <body>
+  <a href="#mc" class="sk" id="sk">Ir al contenido</a>
   <canvas id="pc" aria-hidden="true"></canvas>
   <div class="gl gl1" aria-hidden="true"></div>
   <div class="gl gl2" aria-hidden="true"></div>
@@ -86,7 +100,7 @@
         <h1 class="text-lg sm:text-xl font-bold mb-1.5" style="font-family:'Orbitron',monospace">Tu vehiculo electrico, <span style="color:var(--ac)">legal o no</span>?</h1>
         <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 6 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular.</p>
       </div>
-      <div class="max-w-lg w-full" id="mc"></div>
+      <div class="max-w-lg w-full" id="mc" aria-live="polite" aria-atomic="true"></div>
     </main>
     <footer class="ft mt-auto">
       <div class="max-w-2xl mx-auto px-4 py-3 text-center">
@@ -113,6 +127,10 @@
       </div>
       <div class="mt-2 p-2.5 rounded-lg" style="background:var(--wd);border:1px solid rgba(255,215,64,.15)">
         <p class="text-xs" style="color:var(--fm);line-height:1.5"><i class="fa-solid fa-shield-halved" style="color:var(--wa)"></i> <strong style="color:var(--wa)">Seguridad:</strong> Las API keys se guardan localmente en tu navegador. No se comparten con terceros. Cierra el panel con el botón X para cerrar.</p>
+      </div>
+      <div class="mt-3 pt-3" style="border-top:1px solid var(--bd)">
+        <p class="text-xs font-bold mb-2" style="color:var(--fg);font-family:'Orbitron',monospace;font-size:.65rem;letter-spacing:.4px"><i class="fa-solid fa-history" style="color:var(--ac)"></i> HISTORIAL</p>
+        <div id="hlist"></div>
       </div>
     </div>
   </div>
@@ -157,10 +175,18 @@
         {v:'si',l:'Si, tiene el kit',d:'Luces + reflectantes laterales',i:'fa-solid fa-lightbulb'},
         {v:'no',l:'No lo tiene',d:'Falta equipo de visibilidad',i:'fa-solid fa-eye-slash'}
       ]}
+
+    ];
+
+    /* ====== PRESETS DE VEHICULOS TIPICOS ====== */
+    const PR=[
+      {n:'Bicicleta SPA',d:'Pedaleo <=25km/h <=350W',a:{act:'ped',vel:'25',pot:'350',pas:'1',pes:'120',vis:'si'},i:'fa-bicycle'},
+      {n:'Scooter VMP',d:'Acelerador 12-25km/h 1 pers.',a:{act:'ace',vel:'25',pot:'350',pas:'1',pes:'120',vis:'si'},i:'fa-car-side'},
+      {n:'Bicimoto rapida',d:'Supera 25km/h — requiere placa',a:{act:'ace',vel:'+25',pot:'350',pas:'1',pes:'120',vis:'si'},i:'fa-motorcycle'},
+      {n:'Moto de carga',d:'2 personas + peso >120kg',a:{act:'ace',vel:'25',pot:'350',pas:'+1',pes:'+120',vis:'no'},i:'fa-truck'}
     ];
 
     const st={s:0,a:{},r:null,m:'local',cascade:[]};
-
     /* ====== ESTADO DE PROVEEDORES ====== */
     function gP(){
       try{const d=JSON.parse(localStorage.getItem(C.sp)||'{}');const t=new Date().toDateString();
@@ -265,6 +291,21 @@
     function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas+'-'+a.pes+'-'+a.vis}
     function gC(){try{return JSON.parse(localStorage.getItem(C.sc)||'{}')}catch{return{}}}
     function sC(k,d){const c=gC();c[k]=d;try{localStorage.setItem(C.sc,JSON.stringify(c))}catch{}}
+
+    /* ====== HISTORIAL LOCAL ====== */
+    const HK='vm5h';
+    function gH(){try{return JSON.parse(localStorage.getItem(HK)||'[]')}catch{return[]}}
+    function sH(a,r){
+      const h=gH();const d=new Date();const ds=d.toLocaleDateString('es-PE',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      h.unshift({date:ds,ans:ck(a),t:r.t,cls:r.cls});
+      if(h.length>10)h.length=10;
+      try{localStorage.setItem(HK,JSON.stringify(h))}catch{}
+    }
+    function rHist(c){
+      const h=gH();if(!h.length){c.innerHTML='<p class="text-xs" style="color:var(--fm);opacity:.5">Aun no hay consultas.</p>';return}
+      const dots={spa:'g',vmp:'b',motorizado:'y',noclasif:'gy'};
+      c.innerHTML='<div class="he">'+h.map(e=>`<div class="hi" title="${e.cls}"><div class="hb"><span class="ht ${dots[e.t]||'gy'}"></span><span>${e.ans}</span></div><span style="opacity:.5;font-size:.6rem;white-space:nowrap">${e.date}</span></div>`).join('')+'</div>';
+    }
 
     /* ====== DETECCION DE AGOTAMIENTO ====== */
     function isExh(e){
@@ -391,16 +432,41 @@
     }
 
     /* ====== TOGGLE SETTINGS ====== */
-    function tgS(){const o=document.getElementById('sov');o.classList.toggle('open');if(o.classList.contains('open'))rSet()}
+    function tgS(){const o=document.getElementById('sov');o.classList.toggle('open');if(o.classList.contains('open')){rSet();rHist(document.getElementById('hlist'))}}
+
+    /* ====== VISUAL TOOLTIPS, PRESETS, HASH, ONBOARDING ====== */
+    const ST_I={act:'fa-plug',vel:'fa-gauge-high',pot:'fa-bolt',pas:'fa-person',pes:'fa-weight-hanging',vis:'fa-eye'};
+    const ST_C={act:'#00e676',vel:'#ffd740',pot:'#ff6e40',pas:'#40c4ff',pes:'#b388ff',vis:'#90a4ae'};
+    function ap(a){st.s=5;st.a={...a};st.cascade=[];st.m='local';if(location.hash)location.hash='';rWiz();setTimeout(sub,280)}
+    function pHash(){
+      const h=location.hash.slice(1);if(!h)return;
+      const p=h.split('-');if(p.length!==6)return;
+      const ks=['act','vel','pot','pas','pes','vis'];const o={};
+      for(let i=0;i<6;i++)o[ks[i]]=p[i];
+      const allVals={};S.forEach(s=>s.o.forEach(o=>{allVals[s.id]=allVals[s.id]||{};allVals[s.id][o.v]=1}));
+      for(const k of ks){if(!allVals[k]||!allVals[k][o[k]])return}
+      st.s=5;st.a={...o};st.cascade=[];st.m='local';rWiz();setTimeout(sub,400);
+    }
+    const OB_KEY='vm5o';
+    function showOnb(){
+      if(localStorage.getItem(OB_KEY))return;
+      const d=document.createElement('div');d.id='ob';d.className='ob';
+      d.innerHTML='<div class="ob-c"><h2><i class="fa-solid fa-bolt" style="color:var(--ac)"></i> Bienvenido a VerificaMoto PE</h2><p>Responde 6 preguntas sobre tu vehiculo electrico y sabras si <strong>requiere Placa, SOAT, Brevete</strong>, donde puedes circular y que multas arriesgas.</p><p>Tus respuestas se procesan localmente. Ningun dato sale de tu navegador.</p><label><input type="checkbox" id="obc"> No mostrar mas</label><div class="flex justify-center mt-3"><button class="bp text-sm" onclick="hideOnb()"><i class="fa-solid fa-play"></i> Comenzar</button></div></div>';
+      document.body.appendChild(d);
+    }
+    function hideOnb(){const d=document.getElementById('ob');if(d)d.remove();if(document.getElementById('obc').checked)try{localStorage.setItem(OB_KEY,'1')}catch{}}
+    function apI(i){ap(PR[i].a)}
 
     /* ====== RENDER WIZARD ====== */
     function rWiz(){
       const m=document.getElementById('mc');
       if(gU().count>=C.lim){rLim(m);return}
       let sh='';
+      const pHTML=st.s===0?'<div class="pg">'+PR.map((p,i)=>'<div class="pc" onclick="apI('+i+')" title="'+p.d+'"><div class="pi2"><i class="fa-solid '+p.i+'"></i></div><div>'+p.n+'<div class="pd">'+p.d+'</div></div></div>').join('')+'</div>':'';
       S.forEach((s,i)=>{
         const dir=i<st.s?'l':(i>st.s?'r':'a'),sel=st.a[s.id];
         sh+=`<div class="sp ${dir}" data-step="${i}" style="min-height:350px"><div class="w-full max-w-md mx-auto">
+          <div class="ss"><div class="si2" style="background:${ST_C[s.id]}"><i class="fa-solid ${ST_I[s.id]}"></i></div><span class="st2" style="color:${ST_C[s.id]}">${s.id}</span></div>
           <p class="text-xs font-bold mb-2 tracking-wider" style="color:var(--ac);font-family:'Orbitron',monospace">PASO ${i+1}/${S.length}</p>
           <h2 class="text-base sm:text-lg font-bold mb-3 leading-tight">${s.q}</h2>
           <div class="og mb-2">${s.o.map(o=>`<div class="oc ${sel===o.v?'s':''}" onclick="selO('${s.id}','${o.v}',${i},event)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')selO('${s.id}','${o.v}',${i},event)" aria-pressed="${sel===o.v}"><div class="iw"><i class="${o.i}"></i></div><div class="ot">${o.l}</div><div class="od">${o.d}</div></div>`).join('')}</div>
@@ -408,7 +474,7 @@
         </div></div>`;
       });
       let ih='';S.forEach((_,i)=>{let c=i<st.s?'d':(i===st.s?'a':'');ih+=`<div class="sd ${c}">${i<st.s?'<i class="fa-solid fa-check" style="font-size:.6rem"></i>':(i+1)}</div>`});
-      m.innerHTML=`<div><div class="pt mb-2"><div class="pf" style="width:${(st.s/S.length)*100}%"></div></div><div class="si mb-2">${ih}</div><div class="sv" style="min-height:380px">${sh}</div><div class="flex justify-between items-center mt-2 max-w-md mx-auto"><button class="bg" onclick="prv()" ${st.s===0?'style="visibility:hidden"':''}><i class="fa-solid fa-arrow-left"></i> Anterior</button><button class="bp text-sm" id="bn" onclick="nxt()" ${!st.a[S[st.s].id]?'disabled':''}>${st.s===S.length-1?'<i class="fa-solid fa-magnifying-glass"></i> Verificar':'Siguiente <i class="fa-solid fa-arrow-right"></i>'}</button></div></div>`;
+      m.innerHTML=`<div>${st.s===0?pHTML:''}<div class="pt mb-2"><div class="pf" style="width:${(st.s/S.length)*100}%"></div></div><div class="si mb-2">${ih}</div><div class="sv" style="min-height:380px">${sh}</div><div class="flex justify-between items-center mt-2 max-w-md mx-auto"><button class="bg" onclick="prv()" ${st.s===0?'style="visibility:hidden"':''}><i class="fa-solid fa-arrow-left"></i> Anterior</button><button class="bp text-sm" id="bn" onclick="nxt()" ${!st.a[S[st.s].id]?'disabled':''}>${st.s===S.length-1?'<i class="fa-solid fa-magnifying-glass"></i> Verificar':'Siguiente <i class="fa-solid fa-arrow-right"></i>'}</button></div></div>`;
     }
 
     function rLim(c){
@@ -473,8 +539,10 @@
           <p class="text-xs" style="color:var(--ac);line-height:1.55"><i class="fa-solid fa-circle-check" style="color:var(--ac)"></i> Respeta las normas de tránsito y utiliza las vías autorizadas.</p>
         </div>
         ${clHTML}
-        <div class="flex flex-col sm:flex-row gap-2.5 mb-3"><button onclick="cpR()" class="bg flex-1 justify-center flex items-center gap-2 text-sm"><i class="fa-regular fa-copy"></i> Copiar</button><button onclick="rst()" class="bp flex-1 justify-center text-sm"><i class="fa-solid fa-rotate-right"></i> Nueva consulta</button></div>
+        <div class="flex flex-col sm:flex-row gap-2.5 mb-3"><button onclick="window.print()" class="bg flex-1 justify-center flex items-center gap-2 text-sm"><i class="fa-solid fa-print"></i> Imprimir</button><button onclick="cpR()" class="bg flex-1 justify-center flex items-center gap-2 text-sm"><i class="fa-regular fa-copy"></i> Copiar</button><button onclick="rst()" class="bp flex-1 justify-center text-sm"><i class="fa-solid fa-rotate-right"></i> Nueva consulta</button></div>
       </div>`;
+      location.hash = ck(st.a);
+      sH(st.a, r);
     }
 
     /* ====== NAVEGACION ====== */
@@ -487,7 +555,7 @@
       if(!document.getElementById('ss')){const s=document.createElement('style');s.id='ss';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s)}
       try{const r=await cv(st.a);st.r=r;inc();rRes(r)}catch(e){const r=cl(st.a);st.r=r;st.m='local';st.cascade=[];inc();rRes(r);toast('Error en consulta, se uso logica local','error')}
     }
-    function rst(){st.s=0;st.a={};st.r=null;st.m='local';st.cascade=[];rWiz()}
+    function rst(){st.s=0;st.a={};st.r=null;st.m='local';st.cascade=[];if(location.hash)location.hash='';rWiz()}
 
     /* ====== COPIAR ====== */
     function cpR(){if(!st.r)return;const r=st.r;const ct=r.ci.map(c=>`${c.v}: ${c.p===null?'CONSULTAR':(c.p?'PERMITIDO':'PROHIBIDO')} — ${c.d}`).join('\n');
@@ -502,7 +570,7 @@
       (function f(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.y+=p.sy;p.x+=p.sx;p.p+=.015;const o=p.op*(.6+.4*Math.sin(p.p));if(p.y<-8){p.y=cv.height+8;p.x=Math.random()*cv.width}cx.beginPath();cx.arc(p.x,p.y,Math.max(.1,p.sz),0,6.28);cx.fillStyle=`rgba(0,230,118,${o})`;cx.fill()});requestAnimationFrame(f)})()}
 
     /* ====== INIT ====== */
-    document.addEventListener('DOMContentLoaded',()=>{rDots();rWiz();iPt()});
+    document.addEventListener('DOMContentLoaded',()=>{rDots();rWiz();iPt();pHash();setTimeout(showOnb,500)});
   </script>
 </body>
 </html>

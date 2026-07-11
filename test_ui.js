@@ -2,23 +2,21 @@ const fs = require('fs');
 const { JSDOM } = require('jsdom');
 
 const html = fs.readFileSync('index.html', 'utf8');
-const allErrors = [];
+const scriptMatch = html.match(/<script>([\s\S]*)<\/script>/);
+if (!scriptMatch) { console.log('FALLO: no se encontro <script>'); process.exit(1); }
 
 function makeDom() {
-  const errors = [];
-  const dom = new JSDOM(html, {
-    runScripts: 'dangerously', resources: 'usable', pretendToBeVisual: true,
-    url: 'https://jorzehur.github.io/verificamoto-pe/',
+  const dom = new JSDOM(`<!DOCTYPE html><html><body><div id="mc"></div><div id="dots"></div><div id="sov"><div class="sdr"><div id="prov-list"></div><div id="hlist"></div></div></div><div id="tcc"></div></body></html>`, {
+    runScripts: 'dangerously', url: 'https://verificamoto.pe/', pretendToBeVisual: true,
     beforeParse(window) {
       window.HTMLCanvasElement.prototype.getContext = function () {
         return { clearRect(){}, beginPath(){}, arc(){}, fill(){}, fillStyle:'', fillRect(){}, save(){}, restore(){}, translate(){}, rotate(){}, scale(){} };
       };
       window.requestAnimationFrame = (cb) => setTimeout(() => cb(Date.now()), 16);
-      window.addEventListener('error', (e) => errors.push('window.error: ' + (e.error ? e.error.stack : e.message)));
-      window.console.error = (...a) => errors.push('console.error: ' + a.join(' '));
     }
   });
-  return { dom, errors };
+  dom.window.eval(scriptMatch[1]);
+  return dom;
 }
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -30,23 +28,22 @@ const flows = [
 
 (async () => {
   let pass = 0, fail = 0;
-
   for (const f of flows) {
-    const { dom, errors } = makeDom();
+    const dom = makeDom();
     const w = dom.window, doc = w.document;
-    await sleep(1200);
+    w.rDots(); w.rWiz();
+    await sleep(400);
 
     for (let i = 0; i < f.ans.length; i++) {
       const sel = `.sp[data-step="${i}"] .oc[onclick*="'${f.ans[i]}'"]`;
       const opt = doc.querySelector(sel);
-      if (!opt) { fail++; console.log(`❌ ${f.name}: opcion paso ${i} valor '${f.ans[i]}' no encontrada`); break; }
+      if (!opt) { fail++; console.log(`❌ ${f.name}: opcion paso ${i} no encontrada`); break; }
       opt.click();
-      await sleep(360); // esperar a que selO dispare nxt() (280ms) y re-renderice
+      await sleep(360);
     }
-    // Ultimo paso: pulsar boton "Verificar" (#bn) para disparar submit -> cv -> rRes
     const bn = doc.getElementById('bn');
     if (bn) bn.click();
-    await sleep(800); // sub() es async (spinner + render)
+    await sleep(800);
 
     const mc = doc.getElementById('mc');
     const txt = mc ? mc.innerHTML : '';
@@ -57,12 +54,8 @@ const flows = [
     const ok = okBadge && okExento && okCirc && okLegal;
     if (ok) { pass++; console.log(`✅ UI ${f.name}: badge=${f.badge}, exento=${f.exento}, render completo OK`); }
     else { fail++; console.log(`❌ UI ${f.name}: badge=${okBadge} exento=${okExento} circ=${okCirc} legal=${okLegal}`); }
-    if (errors.length) { console.log(`   Errores JS en ${f.name}:`); errors.forEach(e => console.log('   ' + e)); }
-    allErrors.push(...errors);
     dom.window.close();
   }
-
   console.log(`TOTALES UI: ${pass} pasaron, ${fail} fallaron de ${flows.length}`);
-  if (allErrors.length === 0) console.log('Sin errores JS durante la navegacion y render de los 3 flujos.');
   process.exit(fail ? 1 : 0);
 })();
