@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Verifica si tu vehiculo electrico en Peru requiere Placa, SOAT y Brevete. Herramienta ciudadana gratuita.">
   <title>VerificaMoto PE</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
@@ -17,7 +17,7 @@
     .lo{font-family:'Orbitron',monospace;font-weight:900;letter-spacing:-.5px}
     .dd{display:flex;gap:5px;align-items:center}.dt{width:8px;height:8px;border-radius:50%;background:var(--ad);border:1px solid var(--bd);transition:.3s}.dt.u{background:var(--ac);border-color:var(--ac);box-shadow:0 0 6px var(--ag)}.dl{font-size:.7rem;color:var(--fm);margin-right:6px}.dp{animation:pp 2s ease-in-out infinite}@keyframes pp{0%,100%{opacity:1}50%{opacity:.4}}
     .pt{height:3px;background:var(--ad);border-radius:2px;overflow:hidden}.pf{height:100%;background:var(--ac);border-radius:2px;transition:width .45s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px var(--ag)}
-    .si{display:flex;gap:8px;justify-content:center}.sd{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;border:2px solid var(--bd);color:var(--fm);background:0 0;transition:.35s}.sd.a{border-color:var(--ac);color:var(--ac);background:var(--ad)}.sd.d{border-color:var(--ac);color:var(--bg);background:var(--ac)}
+    .si{display:flex;gap:4px;justify-content:center}.sd{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;border:1.5px solid var(--bd);color:var(--fm);background:0 0;transition:.35s}.sd.a{border-color:var(--ac);color:var(--ac);background:var(--ad)}.sd.d{border-color:var(--ac);color:var(--bg);background:var(--ac)}
     .sv{position:relative;overflow:hidden}.sp{position:absolute;inset:0;padding:0 1rem;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .3s;display:flex;flex-direction:column;align-items:center}.sp.a{transform:translateX(0);opacity:1;pointer-events:all}.sp.l{transform:translateX(-110%);opacity:0;pointer-events:none}.sp.r{transform:translateX(110%);opacity:0;pointer-events:none}
     .og{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;width:100%}
     .oc{flex:1 1 165px;max-width:255px;min-width:150px;padding:1.2rem .85rem;border-radius:var(--r);background:var(--bc);border:2px solid var(--bd);cursor:pointer;transition:.25s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem}
@@ -84,7 +84,7 @@
     <main class="flex-1 flex flex-col items-center justify-start px-4 py-5">
       <div class="max-w-lg w-full text-center mb-4">
         <h1 class="text-lg sm:text-xl font-bold mb-1.5" style="font-family:'Orbitron',monospace">Tu vehiculo electrico, <span style="color:var(--ac)">legal o no</span>?</h1>
-        <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 4 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular. Cascada automatica entre multiples APIs gratuitas.</p>
+        <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 7 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular.</p>
       </div>
       <div class="max-w-lg w-full" id="mc"></div>
     </main>
@@ -148,6 +148,19 @@
       {id:'pas',q:'Cuantas personas transporta segun diseno?',h:'Diseno original de fabrica. No cuenta si agregas accesorios despues.',o:[
         {v:'1',l:'Solo 1 persona',d:'Asiento individual',i:'fa-solid fa-person'},
         {v:'+1',l:'2 o mas personas',d:'Asiento doble/estribos',i:'fa-solid fa-person-bike'}
+      ]},
+      {id:'pes',q:'Peso total del vehiculo?',h:'Incluye bateria. Revisa ficha tecnica o pesa en balanza.',o:[
+        {v:'120',l:'Hasta 120 kg',d:'Vehiculo ligero',i:'fa-solid fa-weight-hanging'},
+        {v:'+120',l:'Mas de 120 kg',d:'Vehiculo pesado',i:'fa-solid fa-truck-monster'}
+      ]},
+      {id:'age',q:'Edad del conductor?',h:'Edad real del conductor al momento de usar el vehiculo.',o:[
+        {v:'-12',l:'Menor de 12 anos',d:'Sin licencia',i:'fa-solid fa-child'},
+        {v:'12-15',l:'12 a 15 anos',d:'Sin licencia formal',i:'fa-solid fa-user-graduate'},
+        {v:'16+',l:'16 o mas anos',d:'Puede obtener licencia',i:'fa-solid fa-id-card'}
+      ]},
+      {id:'noc',q:'Lo usara de noche?',h:'Condiciones de iluminacion y visibilidad.',o:[
+        {v:'si',l:'Si, de noche',d:'Requiere luces',i:'fa-solid fa-moon'},
+        {v:'no',l:'No, solo de dia',d:'Sin requisitos nocturnos',i:'fa-solid fa-sun'}
       ]}
     ];
 
@@ -164,12 +177,26 @@
 
     /* ====== CLASIFICACION LOCAL ====== */
     function cl(a){
-      if(a.act==='ped'&&a.pot==='350'&&(a.vel==='12'||a.vel==='25'))return br('spa',a);
+      // Regla SPA: Pedaleo + ≤350W + ≤25 km/h
+      if(a.act==='ped'&&a.pot==='350'&&(a.vel==='12'||a.vel==='25')){
+        // Verificar peso para SPA
+        if(a.pes==='+120')return br('motorizado',a,'wp');
+        return br('spa',a);
+      }
+      // Regla motorizado por pedaleo fallido
       if(a.act==='ped')return br('motorizado',a,'pf');
+      // Regla motorizado por velocidad >25 km/h
       if(a.vel==='+25')return br('motorizado',a,'vf');
+      // Regla motorizado por 2+ personas
       if(a.pas==='+1')return br('motorizado',a,'xf');
+      // Regla no clasificado por velocidad <12 km/h
       if(a.vel==='12')return br('noclasif',a,'bl');
-      if(a.vel==='25')return br('vmp',a);
+      // Regla VMP: Acelerador + 12-25 km/h + 1 persona
+      if(a.vel==='25'){
+        // Verificar peso para VMP
+        if(a.pes==='+120')return br('motorizado',a,'wp');
+        return br('vmp',a);
+      }
       return br('motorizado',a,'fb');
     }
     function br(t,a,z){
@@ -183,6 +210,7 @@
       const r={pf:`Tiene pedaleo pero ${a.pot==='+350'&&a.vel==='+25'?'la potencia supera 350W y la velocidad supera 25 km/h':(a.pot==='+350'?'la potencia supera 350W':'la velocidad supera 25 km/h')}: no cumple definicion de Bicicleta SPA. Se clasifica como Vehiculo Automotor Cat. L (Anexo I, RNV).`,
         vf:`Supera 25 km/h, limite de la R.D. N.° 0016-2026-MTC/18 para VMP. Se clasifica como Vehiculo Automotor Cat. L.`,
         xf:`Permite >1 persona. R.D. N.° 0016-2026-MTC/18 exige que el VMP "solo permite 1 persona". Se clasifica como Vehiculo Automotor Cat. L.`,
+        wp:`El vehiculo supera 120 kg. Los VMP y bicicletas SPA estan limitados a 120 kg. Se clasifica como Vehiculo Automotor Cat. L.`,
         fb:`No cumple criterios para SPA ni VMP. Se clasifica como Vehiculo Automotor Cat. L.`};
       return(r[z]||r.fb)+' Debes inmatricular ante SUNARP (R. N.° 039-2013-SUNARP/SN), obtener Placa, SOAT y Brevete B2. PROHIBIDO circular por ciclovia — debes usar la calzada.';
     }
@@ -227,11 +255,24 @@
       if(t==='vmp')c.push({n:'Pasajeros',vl:pa[a.pas],s:'p',d:'Cumple: solo 1 persona'});
       else if(t==='motorizado'&&z==='xf')c.push({n:'Pasajeros',vl:pa[a.pas],s:'f',d:'Supera 1 persona — no es VMP'});
       else c.push({n:'Pasajeros',vl:pa[a.pas],s:'n',d:t==='noclasif'?'Cumple pero falla en velocidad':'No es criterio determinante aqui'});
+      // Peso del vehiculo
+      const ps={'120':'Hasta 120 kg','+120':'+120 kg'};
+      if(z==='wp')c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'f',d:'Supera 120 kg — no es VMP ni SPA'});
+      else if(t==='spa'||t==='vmp')c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'p',d:'Dentro del limite permitido'});
+      else c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'i',d:'No es criterio determinante para esta clasificacion'});
+      // Edad del conductor
+      const ed={'-12':'Menor de 12 anos','12-15':'12-15 anos','16+':'16+ anos'};
+      if(a.age==='-12')c.push({n:'Edad del conductor',vl:ed[a.age],s:t==='noclasif'?'f':'n',d:'No puede obtener licencia. Solo SPA/VMP sin licencia.'});
+      else if(a.age==='12-15')c.push({n:'Edad del conductor',vl:ed[a.age],s:'n',d:'Sin licencia formal. Puede usar SPA/VMP con supervision.'});
+      else c.push({n:'Edad del conductor',vl:ed[a.age],s:'p',d:'Puede obtener licencia B2 si es motorizado'});
+      // Uso nocturno
+      if(a.noc==='si')c.push({n:'Uso nocturno',vl:'Si',s:(t==='spa'||t==='vmp')?'p':'n',d:(t==='spa'||t==='vmp')?'Requiere luces delanteras y traseras':'Requiere luces, reflectantes y equipo completo'});
+      else c.push({n:'Uso nocturno',vl:'No',s:'p',d:'Sin requisitos nocturnos'});
       return c;
     }
 
     /* ====== CACHE ====== */
-    function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas}
+    function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas+'-'+a.pes+'-'+a.age+'-'+a.noc}
     function gC(){try{return JSON.parse(localStorage.getItem(C.sc)||'{}')}catch{return{}}}
     function sC(k,d){const c=gC();c[k]=d;try{localStorage.setItem(C.sc,JSON.stringify(c))}catch{}}
 
@@ -244,7 +285,7 @@
 
     /* ====== LLAMADAS API ====== */
     async function cOA(p,a){
-      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Edad:${a.age}. Nocturno:${a.noc==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
       const h={'Authorization':`Bearer ${p.key}`,'Content-Type':'application/json'};
       if(p.id==='openrouter'){h['HTTP-Referer']='https://verificamoto.pe';h['X-Title']='VerificaMoto PE'}
       const r=await fetch(p.url,{method:'POST',headers:h,body:JSON.stringify({model:p.model,messages:[{role:'user',content:prompt}],max_tokens:280,temperature:0})});
@@ -254,7 +295,7 @@
       return JSON.parse(m[0]);
     }
     async function cGe(p,a){
-      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Edad:${a.age}. Nocturno:${a.noc==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
       const r=await fetch(`${p.url}?key=${p.key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:280,temperature:0}})});
       if(!r.ok)throw{status:r.status,message:await r.text().catch(()=>'')};
       const d=await r.json();const m=d.candidates?.[0]?.content?.parts?.[0]?.text?.match(/\{[\s\S]*\}/);
@@ -268,10 +309,15 @@
     }
 
     /* ====== CASCADA PRINCIPAL ====== */
+    const VT=['spa','vmp','motorizado','noclasif'];
     async function cv(a){
       const key=ck(a),cache=gC(),ps=gP(),cascade=[];
       // 1. Cache
-      if(cache[key]){st.m=cache[key]._m||'local';st.cascade=cache[key]._cas||[];const lr=cl(a);return{...lr,ex:cache[key].ex,t:cache[key].t||lr.t}}
+      if(cache[key]){
+        const c=cache[key];st.m=c._m||'local';st.cascade=c._cas||[];
+        if(c._m&&c._m!=='local'&&c.t&&VT.includes(c.t))return br(c.t,a,c.t==='motorizado'?'fb':null);
+        return cl(a);
+      }
       // 2. Cascada por proveedores activos
       for(const p of PV){
         if(p.disabled)continue;
@@ -279,9 +325,11 @@
         if(s.ex)continue; // saltar agotados
         try{
           const ar=await cPr(p,a);
-          sC(key,{...ar,_m:p.id,_cas:[...cascade,{id:p.id,ok:true}]});
+          const tt=(ar&&ar.tipo&&VT.includes(ar.tipo))?ar.tipo:null;
+          const res=tt?br(tt,a,tt==='motorizado'?'fb':null):cl(a);
+          sC(key,{...res,_m:p.id,_cas:[...cascade,{id:p.id,ok:true}]});
           st.m=p.id;st.cascade=[...cascade,{id:p.id,ok:true}];
-          const lr=cl(a);return{...lr,ex:ar.ex,t:ar.t||lr.t};
+          return res;
         }catch(e){
           cascade.push({id:p.id,ok:false});
           if(isExh(e)){s.ex=true;sP(ps);toast(`${p.name} agotado, intentando siguiente...`,'warning')}
@@ -342,7 +390,7 @@
         if(p.disabled)continue;const s=ps[p.id];if(!s||!s.a||!s.k)continue;
         tested++;
         try{
-          await cPr(p,{act:'ace',vel:'25',pot:'350',pas:'1'});
+          await cPr(p,{act:'ace',vel:'25',pot:'350',pas:'1',pes:'120',age:'16+',noc:'no'});
           passed++;s.ex=false;
         }catch(e){if(isExh(e)){s.ex=true}else{console.warn(`${p.id}:`,e.message)}}
       }
@@ -362,15 +410,15 @@
       let sh='';
       S.forEach((s,i)=>{
         const dir=i<st.s?'l':(i>st.s?'r':'a'),sel=st.a[s.id];
-        sh+=`<div class="sp ${dir}" data-step="${i}" style="min-height:310px"><div class="w-full max-w-md mx-auto">
-          <p class="text-xs font-bold mb-3 tracking-wider" style="color:var(--ac);font-family:'Orbitron',monospace">PASO ${i+1}/${S.length}</p>
-          <h2 class="text-base sm:text-lg font-bold mb-4 leading-tight">${s.q}</h2>
-          <div class="og mb-3">${s.o.map(o=>`<div class="oc ${sel===o.v?'s':''}" onclick="selO('${s.id}','${o.v}',${i},event)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')selO('${s.id}','${o.v}',${i},event)" aria-pressed="${sel===o.v}"><div class="iw"><i class="${o.i}"></i></div><div class="ot">${o.l}</div><div class="od">${o.d}</div></div>`).join('')}</div>
+        sh+=`<div class="sp ${dir}" data-step="${i}" style="min-height:350px"><div class="w-full max-w-md mx-auto">
+          <p class="text-xs font-bold mb-2 tracking-wider" style="color:var(--ac);font-family:'Orbitron',monospace">PASO ${i+1}/${S.length}</p>
+          <h2 class="text-base sm:text-lg font-bold mb-3 leading-tight">${s.q}</h2>
+          <div class="og mb-2">${s.o.map(o=>`<div class="oc ${sel===o.v?'s':''}" onclick="selO('${s.id}','${o.v}',${i},event)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')selO('${s.id}','${o.v}',${i},event)" aria-pressed="${sel===o.v}"><div class="iw"><i class="${o.i}"></i></div><div class="ot">${o.l}</div><div class="od">${o.d}</div></div>`).join('')}</div>
           <div class="it"><i class="fa-solid fa-circle-info" style="color:var(--ac);margin-top:1px;flex-shrink:0"></i><span>${s.h}</span></div>
         </div></div>`;
       });
       let ih='';S.forEach((_,i)=>{let c=i<st.s?'d':(i===st.s?'a':'');ih+=`<div class="sd ${c}">${i<st.s?'<i class="fa-solid fa-check" style="font-size:.6rem"></i>':(i+1)}</div>`});
-      m.innerHTML=`<div><div class="pt mb-3"><div class="pf" style="width:${(st.s/S.length)*100}%"></div></div><div class="si mb-4">${ih}</div><div class="sv" style="min-height:330px">${sh}</div><div class="flex justify-between items-center mt-3 max-w-md mx-auto"><button class="bg" onclick="prv()" ${st.s===0?'style="visibility:hidden"':''}><i class="fa-solid fa-arrow-left"></i> Anterior</button><button class="bp text-sm" id="bn" onclick="nxt()" ${!st.a[S[st.s].id]?'disabled':''}>${st.s===S.length-1?'<i class="fa-solid fa-magnifying-glass"></i> Verificar':'Siguiente <i class="fa-solid fa-arrow-right"></i>'}</button></div></div>`;
+      m.innerHTML=`<div><div class="pt mb-2"><div class="pf" style="width:${(st.s/S.length)*100}%"></div></div><div class="si mb-2">${ih}</div><div class="sv" style="min-height:380px">${sh}</div><div class="flex justify-between items-center mt-2 max-w-md mx-auto"><button class="bg" onclick="prv()" ${st.s===0?'style="visibility:hidden"':''}><i class="fa-solid fa-arrow-left"></i> Anterior</button><button class="bp text-sm" id="bn" onclick="nxt()" ${!st.a[S[st.s].id]?'disabled':''}>${st.s===S.length-1?'<i class="fa-solid fa-magnifying-glass"></i> Verificar':'Siguiente <i class="fa-solid fa-arrow-right"></i>'}</button></div></div>`;
     }
 
     function rLim(c){
