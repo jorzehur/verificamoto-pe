@@ -441,7 +441,7 @@
         const failed=st.cascade.filter(c=>!c.ok).map(c=>names[c.id]||c.id);
         if(failed.length>0)cascadBadge=`<div class="mb-3 p-2.5 rounded-lg flex items-start gap-2.5" style="background:var(--wd);border:1px solid rgba(255,215,64,.12)"><i class="fa-solid fa-arrows-rotate" style="color:var(--wa);margin-top:1px;flex-shrink:0"></i><p class="text-xs" style="color:var(--fg);line-height:1.5"><strong>Cascada:</strong> ${st.cascade.map(c=>`<span style="color:${c.ok?'var(--ac)':'var(--da)'}">${names[c.id]||c.id}${c.ok?' ✓':' ✗'}</span>`).join(' → ')}</p></div>`;
         else{const used=names[st.cascade[st.cascade.length-1].id]||'Local';cascadBadge=`<div class="mb-3 text-center"><span class="mb" style="color:var(--ac)"><i class="fa-solid fa-bolt"></i> Resuelto con ${used}</span></div>`;}
-      } else if(st.m==='local'){cascadBadge=`<div class="mb-3 text-center"><span class="mb" style="color:var(--ne)"><i class="fa-solid fa-code"></i> Logica local (sin API)</span></div>`;}
+      }
 
       m.innerHTML=`<div class="rp">
         ${cascadBadge}
@@ -456,7 +456,6 @@
         <details class="mb-4" style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden"><summary class="px-3 py-2.5 cursor-pointer text-sm font-medium flex items-center gap-2" style="background:rgba(255,255,255,.015)"><i class="fa-solid fa-list-check" style="color:var(--ac)"></i>Desglose de criterios</summary><div class="px-3 py-2">${r.cr.map(c=>`<div class="cr"><i class="fa-solid ${ic[c.s]} ${sc[c.s]}" style="width:14px;text-align:center;margin-top:2px;flex-shrink:0;font-size:.7rem"></i><div class="flex-1"><span class="text-sm font-medium">${c.n}</span><span class="text-xs ml-1.5" style="color:var(--fm)">${c.vl}</span><div class="text-xs mt-0.5" style="color:var(--fm);opacity:.75">${c.d}</div></div></div>`).join('')}</div></details>
         <div class="p-2.5 rounded-lg mb-4 flex items-start gap-2.5" style="background:rgba(255,110,64,.06);border:1px solid rgba(255,110,64,.12)"><i class="fa-solid fa-gavel" style="color:var(--da);margin-top:1px"></i><p class="text-xs" style="color:var(--fm);line-height:1.55">Desde <strong style="color:var(--da)">agosto 2026</strong>, la PNP sanciona: <strong style="color:var(--da)">S/ 660</strong> primera vez, <strong style="color:var(--da)">S/ 1,320</strong> reincidencia. Incluye circular en ciclovía con vehiculos no autorizados.</p></div>
         <div class="flex flex-col sm:flex-row gap-2.5 mb-3"><button onclick="cpR()" class="bg flex-1 justify-center flex items-center gap-2 text-sm"><i class="fa-regular fa-copy"></i> Copiar</button><button onclick="rst()" class="bp flex-1 justify-center text-sm"><i class="fa-solid fa-rotate-right"></i> Nueva consulta</button></div>
-        <div class="text-center"><span class="mb"><i class="fa-solid fa-code"></i> Logica local</span></div>
       </div>`;
     }
 
