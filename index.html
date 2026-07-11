@@ -413,7 +413,7 @@
 
     function rLim(c){
       const tmr=new Date();tmr.setDate(tmr.getDate()+1);tmr.setHours(0,0,0,0);const hl=Math.max(1,Math.ceil((tmr-new Date())/36e5));
-      c.innerHTML=`<div class="text-center py-12" style="animation:ri .45s ease forwards"><div class="li mb-3"><i class="fa-solid fa-hourglass-end"></i></div><h2 class="text-lg font-bold mb-2">Limite diario alcanzado</h2><p class="text-sm mb-5" style="color:var(--fm);max-width:300px;margin:0 auto;line-height:1.55">Usaste tus ${C.lim} consultas de hoy. Podras consultar en ~<strong style="color:var(--fg)">${hl}h</strong>.</p><div class="p-3 rounded-xl mb-5" style="background:var(--ad);border:1px solid var(--bd);max-width:320px;margin:0 auto"><p class="text-xs" style="color:var(--fm);line-height:1.5"><i class="fa-solid fa-lightbulb" style="color:var(--ac)"></i> Configura APIs gratuitas en <button onclick="tgS()" style="color:var(--ac);text-decoration:underline;background:none;border:none;cursor:pointer;font:inherit">Config</button> para acceso ilimitado.</p></div><button onclick="rst()" class="bg"><i class="fa-solid fa-rotate-right"></i> Volver</button></div>`;
+      c.innerHTML=`<div class="text-center py-12" style="animation:ri .45s ease forwards"><div class="li mb-3"><i class="fa-solid fa-hourglass-end"></i></div><h2 class="text-lg font-bold mb-2">Limite diario alcanzado</h2><p class="text-sm mb-5" style="color:var(--fm);max-width:300px;margin:0 auto;line-height:1.55">Usaste tus ${C.lim} consultas de hoy. Podras consultar en ~<strong style="color:var(--fg)">${hl}h</strong>.</p><button onclick="rst()" class="bg"><i class="fa-solid fa-rotate-right"></i> Volver</button></div>`;
     }
 
     /* ====== RENDER RESULTADO ====== */
