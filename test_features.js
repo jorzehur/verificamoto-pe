@@ -6,7 +6,7 @@ const scriptMatch = html.match(/<script>([\s\S]*)<\/script>/);
 if (!scriptMatch) { console.log('FALLO: no se encontro <script>'); process.exit(1); }
 
 function makeDom() {
-  const dom = new JSDOM('<!DOCTYPE html><html><body><div id="mc"></div><div id="dots"></div><div id="sov"><div class="sdr"><div id="prov-list"></div><div id="hlist"></div></div></div><div id="tcc"></div></body></html>', {
+  const dom = new JSDOM('<!DOCTYPE html><html><body><div id="mc"></div><div id="dots"></div><canvas id="pc"></canvas><div id="sov"><div class="sdr"><div id="prov-list"></div><div id="hlist"></div></div></div><div id="tcc"></div></body></html>', {
     runScripts: 'dangerously', url: 'https://verificamoto.pe/', pretendToBeVisual: true,
     beforeParse(w) {
       w.HTMLCanvasElement.prototype.getContext = () => ({clearRect(){},beginPath(){},arc(){},fill(){}});
@@ -24,7 +24,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   {
     const dom = makeDom(); const w = dom.window, d = w.document;
     w.rDots(); w.rWiz(); await sleep(400);
-    const ans = ['ace','+25','+350','1','120','si'];
+    const ans = ['ace','+25','+350','1','si','mot'];
     for (let i = 0; i < ans.length; i++) {
       const o = d.querySelector('.sp[data-step="' + i + '"] .oc[onclick*="\'' + ans[i] + '\'"]');
       o.click(); await sleep(360);
@@ -44,7 +44,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   {
     const dom = makeDom(); const w = dom.window, d = w.document;
     w.rDots(); w.rWiz(); await sleep(400);
-    const ans = ['ped','25','350','1','120','si'];
+    const ans = ['ped','25','350','1','si','sco'];
     for (let i = 0; i < ans.length; i++) {
       const o = d.querySelector('.sp[data-step="' + i + '"] .oc[onclick*="\'' + ans[i] + '\'"]');
       o.click(); await sleep(360);

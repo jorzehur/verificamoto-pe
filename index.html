@@ -99,7 +99,7 @@
     <main class="flex-1 flex flex-col items-center justify-start px-4 py-5">
       <div class="max-w-lg w-full text-center mb-4">
         <h1 class="text-lg sm:text-xl font-bold mb-1.5" style="font-family:'Orbitron',monospace">Tu vehiculo electrico, <span style="color:var(--ac)">legal o no</span>?</h1>
-        <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 7 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular.</p>
+        <p class="text-xs" style="color:var(--fm);line-height:1.55">Responde 6 preguntas: sabras si requiere Placa ante SUNARP, SOAT, Brevete, y donde puedes circular.</p>
       </div>
       <div class="max-w-lg w-full" id="mc" aria-live="polite" aria-atomic="true"></div>
     </main>
@@ -168,10 +168,6 @@
         {v:'1',l:'Solo 1 persona',d:'Asiento individual',i:'fa-solid fa-person'},
         {v:'+1',l:'2 o mas personas',d:'Asiento doble/estribos',i:'fa-solid fa-person-bike'}
       ]},
-      {id:'pes',q:'Peso total del vehiculo?',h:'Incluye bateria. Revisa ficha tecnica o pesa en balanza.',o:[
-        {v:'120',l:'Hasta 120 kg',d:'Vehiculo ligero',i:'fa-solid fa-weight-hanging'},
-        {v:'+120',l:'Mas de 120 kg',d:'Vehiculo pesado',i:'fa-solid fa-truck-monster'}
-      ]},
       {id:'vis',q:'Cuenta con kit de visibilidad permanente?',h:'Luz delantera, luz de freno posterior y laminas/cintas retrorreflectantes laterales. Exigido por ley para VMP, SPA y motos (dia y noche).',o:[
         {v:'si',l:'Si, tiene el kit',d:'Luces + reflectantes laterales',i:'fa-solid fa-lightbulb'},
         {v:'no',l:'No lo tiene',d:'Falta equipo de visibilidad',i:'fa-solid fa-eye-slash'}
@@ -185,10 +181,10 @@
 
     /* ====== PRESETS DE VEHICULOS TIPICOS ====== */
     const PR=[
-      {n:'Bicicleta SPA',d:'Pedaleo <=25km/h <=350W',a:{act:'ped',vel:'25',pot:'350',pas:'1',pes:'120',vis:'si',dis:'sco'},i:'fa-bicycle'},
-      {n:'Scooter VMP',d:'Acelerador 12-25km/h 1 pers.',a:{act:'ace',vel:'25',pot:'350',pas:'1',pes:'120',vis:'si',dis:'sco'},i:'fa-car-side'},
-      {n:'Bicimoto rapida',d:'Supera 25km/h — requiere placa',a:{act:'ace',vel:'+25',pot:'350',pas:'1',pes:'120',vis:'si',dis:'mot'},i:'fa-motorcycle'},
-      {n:'Moto de carga',d:'2 personas + peso >120kg',a:{act:'ace',vel:'25',pot:'350',pas:'+1',pes:'+120',vis:'no',dis:'mot'},i:'fa-truck'}
+      {n:'Bicicleta SPA',d:'Pedaleo <=25km/h <=350W',a:{act:'ped',vel:'25',pot:'350',pas:'1',vis:'si',dis:'sco'},i:'fa-bicycle'},
+      {n:'Scooter VMP',d:'Acelerador 12-25km/h 1 pers.',a:{act:'ace',vel:'25',pot:'350',pas:'1',vis:'si',dis:'sco'},i:'fa-car-side'},
+      {n:'Bicimoto rapida',d:'Supera 25km/h — requiere placa',a:{act:'ace',vel:'+25',pot:'350',pas:'1',vis:'si',dis:'mot'},i:'fa-motorcycle'},
+      {n:'Moto de carga',d:'2 personas — requiere placa',a:{act:'ace',vel:'25',pot:'350',pas:'+1',vis:'no',dis:'mot'},i:'fa-truck'}
     ];
 
     const st={s:0,a:{},r:null,m:'local',cascade:[]};
@@ -209,8 +205,6 @@
       if(a.dis==='mot')return br('motorizado',a,'dm');
       // Regla SPA: Pedaleo + ≤350W + ≤25 km/h
       if(a.act==='ped'&&a.pot==='350'&&(a.vel==='12'||a.vel==='25')){
-        // Verificar peso para SPA
-        if(a.pes==='+120')return br('motorizado',a,'wp');
         return br('spa',a);
       }
       // Regla motorizado por pedaleo fallido
@@ -223,8 +217,6 @@
       if(a.vel==='12')return br('noclasif',a,'bl');
       // Regla VMP: Acelerador + 12-25 km/h + 1 persona
       if(a.vel==='25'){
-        // Verificar peso para VMP
-        if(a.pes==='+120')return br('motorizado',a,'wp');
         return br('vmp',a);
       }
       return br('motorizado',a,'fb');
@@ -240,7 +232,6 @@
       const r={pf:`Tiene pedaleo pero ${a.pot==='+350'&&a.vel==='+25'?'la potencia supera 350W y la velocidad supera 25 km/h':(a.pot==='+350'?'la potencia supera 350W':'la velocidad supera 25 km/h')}: no cumple definicion de Bicicleta SPA. Se clasifica como Vehiculo Automotor Cat. L (Anexo I, RNV).`,
         vf:`Supera 25 km/h, limite de la R.D. N.° 0016-2026-MTC/18 para VMP. Se clasifica como Vehiculo Automotor Cat. L.`,
         xf:`Permite >1 persona. R.D. N.° 0016-2026-MTC/18 exige que el VMP "solo permite 1 persona". Se clasifica como Vehiculo Automotor Cat. L.`,
-        wp:`El vehiculo supera 120 kg. Los VMP y bicicletas SPA estan limitados a 120 kg. Se clasifica como Vehiculo Automotor Cat. L.`,
         dm:`Tiene configuracion de motocicleta (asiento fijo de fabrica, chasis/carenado con apariencia de moto, o espejos y comandos de luces de serie). Segun el Reglamento Nacional de Vehiculos (RNV) y directrices de la Asociacion Automotriz del Peru (AAP), la naturaleza juridica se determina por la configuracion mecanica y de fabrica, no solo por la velocidad por software o la potencia declarada. Automaticamente Categoria L.`,
         fb:`No cumple criterios para SPA ni VMP. Se clasifica como Vehiculo Automotor Cat. L.`};
       return(r[z]||r.fb)+' Debes inmatricular ante SUNARP (R. N.° 039-2013-SUNARP/SN), obtener Placa, SOAT y Brevete B2. PROHIBIDO circular por ciclovia — debes usar la calzada.';
@@ -290,11 +281,6 @@
       if(t==='vmp')c.push({n:'Pasajeros',vl:pa[a.pas],s:'p',d:'Cumple: solo 1 persona'});
       else if(t==='motorizado'&&z==='xf')c.push({n:'Pasajeros',vl:pa[a.pas],s:'f',d:'Supera 1 persona — no es VMP'});
       else c.push({n:'Pasajeros',vl:pa[a.pas],s:'n',d:t==='noclasif'?'Cumple pero falla en velocidad':'No es criterio determinante aqui'});
-      // Peso del vehiculo
-      const ps={'120':'Hasta 120 kg','+120':'+120 kg'};
-      if(z==='wp')c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'f',d:'Supera 120 kg — no es VMP ni SPA'});
-      else if(t==='spa'||t==='vmp')c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'p',d:'Dentro del limite permitido'});
-      else c.push({n:'Peso del vehiculo',vl:ps[a.pes],s:'i',d:'No es criterio determinante para esta clasificacion'});
       // Kit de visibilidad permanente (ley exige dia y noche)
       if(a.vis==='si')c.push({n:'Kit de visibilidad',vl:'Si',s:'p',d:'Cumple: luz delantera, luz de freno y laminas retrorreflectantes laterales (exigido dia y noche)'});
       else c.push({n:'Kit de visibilidad',vl:'No',s:(t==='spa'||t==='vmp'||t==='motorizado')?'f':'i',d:(t==='spa'||t==='vmp'||t==='motorizado')?'Falta equipo de visibilidad obligatorio (luz delantera, luz de freno y reflectantes laterales)':'No es criterio determinante aqui'});
@@ -302,7 +288,7 @@
     }
 
     /* ====== CACHE ====== */
-    function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas+'-'+a.pes+'-'+a.vis+'-'+(a.dis||'sco')}
+    function ck(a){return a.act+'-'+a.vel+'-'+a.pot+'-'+a.pas+'-'+a.vis+'-'+(a.dis||'sco')}
     function gC(){try{return JSON.parse(localStorage.getItem(C.sc)||'{}')}catch{return{}}}
     function sC(k,d){const c=gC();c[k]=d;try{localStorage.setItem(C.sc,JSON.stringify(c))}catch{}}
 
@@ -330,7 +316,7 @@
 
     /* ====== LLAMADAS API ====== */
     async function cOA(p,a){
-      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Visibilidad:${a.vis==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Visibilidad:${a.vis==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
       const h={'Authorization':`Bearer ${p.key}`,'Content-Type':'application/json'};
       if(p.id==='openrouter'){h['HTTP-Referer']='https://verificamoto.pe';h['X-Title']='VerificaMoto PE'}
       const r=await fetch(p.url,{method:'POST',headers:h,body:JSON.stringify({model:p.model,messages:[{role:'user',content:prompt}],max_tokens:280,temperature:0})});
@@ -340,7 +326,7 @@
       return JSON.parse(m[0]);
     }
     async function cGe(p,a){
-      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Peso:${a.pes==='120'?'<=120kg':'+120kg'}. Visibilidad:${a.vis==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
+      const prompt=`Clasifica vehiculo electrico Peru. Activacion:${a.act==='ped'?'pedaleo':'acelerador'}. Velocidad:${a.vel==='12'?'<=12':(a.vel==='25'?'12-25':'+25')}km/h. Potencia:${a.pot==='350'?'<=350':'+350'}W. Pasajeros:${a.pas==='1'?'1':'+1'}. Visibilidad:${a.vis==='si'?'si':'no'}. Solo JSON:{"tipo":"spa"|"vmp"|"motorizado"|"noclasif","explicacion":"..."}`;
       const r=await fetch(`${p.url}?key=${p.key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:280,temperature:0}})});
       if(!r.ok)throw{status:r.status,message:await r.text().catch(()=>'')};
       const d=await r.json();const m=d.candidates?.[0]?.content?.parts?.[0]?.text?.match(/\{[\s\S]*\}/);
@@ -438,7 +424,7 @@
         if(p.disabled)continue;const s=ps[p.id];if(!s||!s.a||!s.k)continue;
         tested++;
         try{
-          await cPr(p,{act:'ace',vel:'25',pot:'350',pas:'1',pes:'120',vis:'no'});
+          await cPr(p,{act:'ace',vel:'25',pot:'350',pas:'1',vis:'no'});
           passed++;s.ex=false;
         }catch(e){if(isExh(e)){s.ex=true}else{console.warn(`${p.id}:`,e.message)}}
       }
@@ -452,13 +438,13 @@
     function tgS(){const o=document.getElementById('sov');o.classList.toggle('open');if(o.classList.contains('open')){rSet();rHist(document.getElementById('hlist'))}}
 
     /* ====== VISUAL TOOLTIPS, PRESETS, HASH, ONBOARDING ====== */
-    const ST_I={act:'fa-plug',vel:'fa-gauge-high',pot:'fa-bolt',pas:'fa-person',pes:'fa-weight-hanging',vis:'fa-eye',dis:'fa-motorcycle'};
-    const ST_C={act:'#00e676',vel:'#ffd740',pot:'#ff6e40',pas:'#40c4ff',pes:'#b388ff',vis:'#90a4ae',dis:'#ff8a65'};
+    const ST_I={act:'fa-plug',vel:'fa-gauge-high',pot:'fa-bolt',pas:'fa-person',vis:'fa-eye',dis:'fa-motorcycle'};
+    const ST_C={act:'#00e676',vel:'#ffd740',pot:'#ff6e40',pas:'#40c4ff',vis:'#90a4ae',dis:'#ff8a65'};
     function ap(a){st.s=6;st.a={...a};st.cascade=[];st.m='local';if(location.hash)location.hash='';rWiz();setTimeout(sub,280)}
     function pHash(){
       const h=location.hash.slice(1);if(!h)return;
-      const p=h.split('-');if(p.length!==7)return;
-      const ks=['act','vel','pot','pas','pes','vis','dis'];const o={};
+      const p=h.split('-');if(p.length!==6)return;
+      const ks=['act','vel','pot','pas','vis','dis'];const o={};
       for(let i=0;i<7;i++)o[ks[i]]=p[i];
       const allVals={};S.forEach(s=>s.o.forEach(o=>{allVals[s.id]=allVals[s.id]||{};allVals[s.id][o.v]=1}));
       for(const k of ks){if(!allVals[k]||!allVals[k][o[k]])return}

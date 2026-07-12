@@ -6,7 +6,7 @@ Este documento contiene la estructura de preguntas (quiz), las reglas de clasifi
 
 ## 1. Estructura de Preguntas del Formulario (Quiz Flow)
 
-El cuestionario consta de 7 preguntas que definen las características físicas y operativas del vehículo eléctrico en consulta:
+El cuestionario consta de 6 preguntas que definen las características físicas y operativas del vehículo eléctrico en consulta:
 
 1. **Activación del motor (`act`):**
    * **Pedaleo asistido (`ped`):** El motor solo se activa al pedalear (tracción humana asistida).
@@ -25,15 +25,11 @@ El cuestionario consta de 7 preguntas que definen las características físicas 
    * **Solo 1 persona (`1`):** Asiento individual diseñado de fábrica para un conductor.
    * **2 o más personas (`+1`):** Asientos dobles, estribos o espacio de carga integrado de fábrica.
 
-5. **Peso neto del vehículo (`pes`):**
-   * **Hasta 120 kg (`120`):** Límite máximo de peso para VMP y SPA.
-   * **Más de 120 kg (`+120`):** Vehículos pesados o de carga.
-
-6. **Kit de visibilidad permanente del vehículo (`vis`):**
+ 5. **Kit de visibilidad permanente del vehículo (`vis`):**
    * **Sí (`si`):** Cuenta con luz delantera, luz de freno posterior y láminas/cintas retrorreflectantes laterales de fábrica.
    * **No (`no`):** No dispone del kit de visibilidad permanente (obligatorio por ley para VMP, SPA y motos, tanto de día como de noche).
 
-7. **Configuración física del vehículo (`dis`):**
+ 6. **Configuración física del vehículo (`dis`):**
    * **Scooter / Monopatín (`sco`):** Plataforma para ir de pie o sillín plegable/removible, sin carrocería de motocicleta.
    * **Motocicleta / Trimoto (`mot`):** Asiento fijo de fábrica, chasis/carenado con apariencia de motocicleta, o espejos y comandos de luces de serie.
    * **Hard trigger (RNV / AAP):** Si la configuración física es de motocicleta (`mot`), el vehículo se clasifica **automáticamente como Vehículo Automotor Categoría L**, sin importar velocidad ni potencia declaradas. La naturaleza jurídica se determina por la configuración mecánica y de fábrica, no solo por el software o la potencia.
@@ -49,8 +45,7 @@ El sistema clasifica el vehículo en una de cuatro categorías según las respue
   * Activación por pedaleo (`ped`).
   * Potencia del motor hasta 350W (`350`).
   * Velocidad máxima hasta 25 km/h (rango `12` o `25`).
-  * Peso total hasta 120 kg (`120`).
-* **Estado legal:**
+ * **Estado legal:**
   * **No constituye vehículo automotor.**
   * **EXENTO** de Placa (SUNARP), SOAT y Brevete (Licencia).
   * **Permitido circular en:** Ciclovías y calzadas (carril derecho).
@@ -62,8 +57,7 @@ El sistema clasifica el vehículo en una de cuatro categorías según las respue
   * Activación por acelerador manual (`ace`).
   * Velocidad máxima mayor a 12 km/h y hasta 25 km/h (`25`).
   * Capacidad de pasajeros de fábrica: solo 1 persona (`1`).
-  * Peso total hasta 120 kg (`120`).
-* **Estado legal:**
+ * **Estado legal:**
   * **No forma parte de la clasificación vehicular convencional del Anexo I del RNV.**
   * **EXENTO** de inmatriculación en SUNARP, Placa, SOAT y Brevete.
   * **Permitido circular en:** Ciclovías y calzadas (carril derecho, junto al cordón de la acera).
@@ -75,8 +69,7 @@ El sistema clasifica el vehículo en una de cuatro categorías según las respue
   * Si tiene pedaleo asistido pero supera los 350W de potencia o los 25 km/h de velocidad.
   * Si la velocidad de construcción supera los 25 km/h (`+25`).
   * Si el diseño del vehículo permite llevar a más de 1 persona (`+1`).
-  * Si el peso neto del vehículo supera los 120 kg (`+120`).
-* **Estado legal:**
+ * **Estado legal:**
   * **Clasificado como Vehículo Automotor.**
   * **OBLIGATORIO:** Inscripción en SUNARP, Placa de rodaje física, SOAT vigente y Brevete de Categoría B2 (B-IIa mínimo para bicimotos).
   * **Permitido circular en:** Calzada (pista).

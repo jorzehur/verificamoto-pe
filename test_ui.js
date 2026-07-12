@@ -21,9 +21,9 @@ function makeDom() {
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 const flows = [
-  { name:'SPA',        ans:['ped','25','350','1','120','si','sco'],  badge:'SPA',        exento:true },
-  { name:'VMP',        ans:['ace','25','350','1','120','si','sco'],  badge:'VMP',        exento:true },
-  { name:'MOTORIZADO', ans:['ace','+25','+350','1','120','si','mot'],badge:'AUTOMOTOR', exento:false },
+  { name:'SPA',        ans:['ped','25','350','1','si','sco'],  badge:'SPA',        exento:true },
+  { name:'VMP',        ans:['ace','25','350','1','si','sco'],  badge:'VMP',        exento:true },
+  { name:'MOTORIZADO', ans:['ace','+25','+350','1','si','mot'],badge:'AUTOMOTOR', exento:false },
 ];
 
 (async () => {

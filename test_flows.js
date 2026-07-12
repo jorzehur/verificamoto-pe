@@ -18,17 +18,15 @@ const w = dom.window;
 if (typeof w.cl !== 'function') { console.log('FALLO: la funcion cl() no esta disponible en window'); process.exit(1); }
 
 const cases = [
-  { name:'FLUJO 1 - SPA (Pedaleo asistido)', a:{ act:'ped', vel:'25', pot:'350', pas:'1', pes:'120', vis:'si', dis:'sco' }, expect:'spa' },
-  { name:'FLUJO 2 - VMP (Acelerador manual)', a:{ act:'ace', vel:'25', pot:'350', pas:'1', pes:'120', vis:'si', dis:'sco' }, expect:'vmp' },
-  { name:'FLUJO 3 - MOTORIZADO (Cat. L)', a:{ act:'ace', vel:'+25', pot:'+350', pas:'1', pes:'120', vis:'si', dis:'sco' }, expect:'motorizado' },
-  { name:'SPA variante vel=12', a:{ act:'ped', vel:'12', pot:'350', pas:'1', pes:'120', vis:'no', dis:'sco' }, expect:'spa' },
-  { name:'Motorizado por pedaleo >350W', a:{ act:'ped', vel:'25', pot:'+350', pas:'1', pes:'120', vis:'no', dis:'sco' }, expect:'motorizado' },
-  { name:'Motorizado por 2+ pasajeros', a:{ act:'ace', vel:'25', pot:'350', pas:'+1', pes:'120', vis:'no', dis:'sco' }, expect:'motorizado' },
-  { name:'Motorizado por peso >120kg (VMP)', a:{ act:'ace', vel:'25', pot:'350', pas:'1', pes:'+120', vis:'no', dis:'sco' }, expect:'motorizado' },
-  { name:'Motorizado por peso >120kg (SPA)', a:{ act:'ped', vel:'25', pot:'350', pas:'1', pes:'+120', vis:'no', dis:'sco' }, expect:'motorizado' },
-  { name:'No clasificado (acel, <=12km/h)', a:{ act:'ace', vel:'12', pot:'350', pas:'1', pes:'120', vis:'no', dis:'sco' }, expect:'noclasif' },
-  { name:'HARD TRIGGER - moto -> Cat. L (aunque sea lento)', a:{ act:'ped', vel:'12', pot:'350', pas:'1', pes:'120', vis:'si', dis:'mot' }, expect:'motorizado' },
-  { name:'HARD TRIGGER - moto -> Cat. L (VMP por lo demas)', a:{ act:'ace', vel:'25', pot:'350', pas:'1', pes:'120', vis:'si', dis:'mot' }, expect:'motorizado' },
+  { name:'FLUJO 1 - SPA (Pedaleo asistido)', a:{ act:'ped', vel:'25', pot:'350', pas:'1', vis:'si', dis:'sco' }, expect:'spa' },
+  { name:'FLUJO 2 - VMP (Acelerador manual)', a:{ act:'ace', vel:'25', pot:'350', pas:'1', vis:'si', dis:'sco' }, expect:'vmp' },
+  { name:'FLUJO 3 - MOTORIZADO (Cat. L)', a:{ act:'ace', vel:'+25', pot:'+350', pas:'1', vis:'si', dis:'sco' }, expect:'motorizado' },
+  { name:'SPA variante vel=12', a:{ act:'ped', vel:'12', pot:'350', pas:'1', vis:'no', dis:'sco' }, expect:'spa' },
+  { name:'Motorizado por pedaleo >350W', a:{ act:'ped', vel:'25', pot:'+350', pas:'1', vis:'no', dis:'sco' }, expect:'motorizado' },
+  { name:'Motorizado por 2+ pasajeros', a:{ act:'ace', vel:'25', pot:'350', pas:'+1', vis:'no', dis:'sco' }, expect:'motorizado' },
+  { name:'No clasificado (acel, <=12km/h)', a:{ act:'ace', vel:'12', pot:'350', pas:'1', vis:'no', dis:'sco' }, expect:'noclasif' },
+  { name:'HARD TRIGGER - moto -> Cat. L (aunque sea lento)', a:{ act:'ped', vel:'12', pot:'350', pas:'1', vis:'si', dis:'mot' }, expect:'motorizado' },
+  { name:'HARD TRIGGER - moto -> Cat. L (VMP por lo demas)', a:{ act:'ace', vel:'25', pot:'350', pas:'1', vis:'si', dis:'mot' }, expect:'motorizado' },
 ];
 
 let pass = 0, fail = 0;
