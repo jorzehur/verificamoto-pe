@@ -588,7 +588,7 @@
     /* ====== PARTICULAS ====== */
     function iPt(){const cv=document.getElementById('pc'),cx=cv.getContext('2d');let ps=[];for(let i=0;i<18;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*cv.height,sz:Math.random()*1.2+.3,sy:-(Math.random()*.2+.04),sx:(Math.random()-.5)*.1,op:Math.random()*.2+.04,p:Math.random()*6.28});
       function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();addEventListener('resize',rs);
-      if(matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
       (function f(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.y+=p.sy;p.x+=p.sx;p.p+=.015;const o=p.op*(.6+.4*Math.sin(p.p));if(p.y<-8){p.y=cv.height+8;p.x=Math.random()*cv.width}cx.beginPath();cx.arc(p.x,p.y,Math.max(.1,p.sz),0,6.28);cx.fillStyle=`rgba(0,230,118,${o})`;cx.fill()});requestAnimationFrame(f)})()}
 
     /* ====== INIT ====== */
