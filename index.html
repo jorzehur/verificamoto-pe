@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Verifica si tu vehiculo electrico en Peru requiere Placa, SOAT y Brevete. Herramienta ciudadana gratuita.">
+  <meta name="theme-color" content="#060d09">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23060d09'/%3E%3Cpath d='M54 12 28 54h18l-6 34 26-42H48z' fill='%2300e676'/%3E%3C/svg%3E">
   <title>VerificaMoto PE</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
   <style>
     :root{--bg:#060d09;--bc:rgba(10,28,18,.82);--bh:rgba(16,42,28,.95);--fg:#e0f2e9;--fm:#6dba80;--ac:#00e676;--ad:rgba(0,230,118,.12);--ag:rgba(0,230,118,.25);--wa:#ffd740;--wd:rgba(255,215,64,.12);--da:#ff6e40;--dd:rgba(255,110,64,.12);--in:#40c4ff;--id:rgba(64,196,255,.12);--ne:#90a4ae;--nd:rgba(144,164,174,.12);--bd:rgba(0,230,118,.13);--r:14px}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
@@ -148,8 +153,10 @@
   <div class="tc" id="tcc" aria-live="polite"></div>
 
   <script>
+    try{if(window.top!==window.self)window.top.location=window.self.location}catch(e){}
     /* ====== CONFIG ====== */
     const C={lim:5,su:'vm5u',sk:'vm5k',sc:'vm5c',sp:'vm5p'};
+    const CV=2; // version de cache (bump para invalidar caché al cambiar la logica/normativa)
 
     /* ====== PROVEEDORES ====== */
     const PV=[
@@ -186,7 +193,6 @@
         {v:'sco',l:'Scooter / Monopatin',d:'Plataforma de pie o sillín plegable, sin carrocería de moto',i:'fa-solid fa-person'},
         {v:'mot',l:'Motocicleta / Trimoto',d:'Asiento fijo de fábrica o apariencia de moto (espejos/luces)',i:'fa-solid fa-motorcycle'}
       ]}
-
     ];
 
     /* ====== PRESETS DE VEHICULOS TIPICOS ====== */
@@ -197,7 +203,7 @@
       {n:'Moto de carga',d:'2 personas — requiere placa',a:{act:'ace',vel:'25',pot:'350',pas:'+1',vis:'no',dis:'mot'},i:'fa-truck'}
     ];
 
-    const st={s:0,a:{},r:null,m:'local',cascade:[]};
+    const st={s:0,a:{},r:null,m:'local',cascade:[],usedAPI:false};
     /* ====== ESTADO DE PROVEEDORES ====== */
     function gP(){
       try{const d=JSON.parse(localStorage.getItem(C.sp)||'{}');const t=new Date().toDateString();
@@ -276,7 +282,7 @@
       const c=[];
       // Configuración física/estructural (criterio RNV/AAP)
       if(a.dis){
-        c.push({n:'Configuracion fisica',vl:a.dis==='mot'?'Motocicleta':'Scooter/Monopatin',s:a.dis==='mot'?'f':(t==='motorizado'?'f':'p'),d:a.dis==='mot'?'Asiento fijo de fabrica / apariencia de moto: automaticamente Categoria L (RNV, AAP)':'Plataforma de pie / sillin plegable, sin carroceria de moto'});
+        c.push({n:'Configuracion fisica',vl:a.dis==='mot'?'Motocicleta':'Scooter/Monopatin',s:a.dis==='mot'?'f':(t==='motorizado'?'f':'p'),d:a.dis==='mot'?'Configuracion de motocicleta (asiento fijo / apariencia de moto): determina Categoría L (RNV/AAP) y prevalece sobre los demas criterios':'Plataforma de pie / sillin plegable, sin carroceria de moto'});
       }
       if(a.act==='ped'){c.push({n:'Pedaleo asistido',vl:'Si',s:t==='spa'?'p':(z==='pf'?'f':'i'),d:t==='spa'?'Cumple: motor al pedalear':'Tiene pedaleo pero falla otro criterio'})}
       else{c.push({n:'Pedaleo asistido',vl:'No (acelerador)',s:'n',d:'No es bicicleta SPA'})}
@@ -305,6 +311,7 @@
     /* ====== HISTORIAL LOCAL ====== */
     const HK='vm5h';
     function gH(){try{return JSON.parse(localStorage.getItem(HK)||'[]')}catch{return[]}}
+    function esc(s){return String(s==null?'':s).replace(/&/g,'&'+'amp;').replace(/</g,'&'+'lt;').replace(/>/g,'&'+'gt;').replace(/"/g,'&'+'quot;').replace(/'/g,'&'+'#39;')}
     function sH(a,r){
       const h=gH();const d=new Date();const ds=d.toLocaleDateString('es-PE',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       h.unshift({date:ds,ans:ck(a),t:r.t,cls:r.cls});
@@ -314,7 +321,7 @@
     function rHist(c){
       const h=gH();if(!h.length){c.innerHTML='<p class="text-xs" style="color:var(--fm);opacity:.5">Aun no hay consultas.</p>';return}
       const dots={spa:'g',vmp:'b',motorizado:'y',noclasif:'gy'};
-      c.innerHTML='<div class="he">'+h.map(e=>`<div class="hi" title="${e.cls}"><div class="hb"><span class="ht ${dots[e.t]||'gy'}"></span><span>${e.ans}</span></div><span style="opacity:.5;font-size:.6rem;white-space:nowrap">${e.date}</span></div>`).join('')+'</div>';
+      c.innerHTML='<div class="he">'+h.map(e=>`<div class="hi" title="${esc(e.cls)}"><div class="hb"><span class="ht ${dots[e.t]||'gy'}"></span><span>${esc(e.ans)}</span></div><span style="opacity:.5;font-size:.6rem;white-space:nowrap">${esc(e.date)}</span></div>`).join('')+'</div>';
     }
 
     /* ====== DETECCION DE AGOTAMIENTO ====== */
@@ -352,27 +359,27 @@
     /* ====== CASCADA PRINCIPAL ====== */
     const VT=['spa','vmp','motorizado','noclasif'];
     async function cv(a){
-      const key=ck(a),cache=gC(),ps=gP(),cascade=[];
+      const key=ck(a),cKey=CV+'|'+key,cache=gC(),ps=gP(),cascade=[];
       // HARD TRIGGER (configuración física de motocicleta): fuerza Categoría L
       // antes del cache y de la cascada de APIs, protegiendo al usuario.
-      if(a.dis==='mot'){st.m='local';st.cascade=[];return br('motorizado',a,'dm')}
+      if(a.dis==='mot'){st.m='local';st.cascade=[];st.usedAPI=false;return br('motorizado',a,'dm')}
       // 1. Cache
-      if(cache[key]){
-        const c=cache[key];st.m=c._m||'local';st.cascade=c._cas||[];
+      if(cache[cKey]){
+        const c=cache[cKey];st.m=c._m||'local';st.cascade=c._cas||[];st.usedAPI=false;
         if(c._m&&c._m!=='local'&&c.t&&VT.includes(c.t))return br(c.t,a,c.t==='motorizado'?'fb':null);
         return cl(a);
       }
       // 2. Cascada por proveedores activos
       for(const p of PV){
-        if(p.disabled)continue;
+        if(p.disabled||!p.url)continue;
         const s=ps[p.id];if(!s||!s.a||!s.k)continue;
         if(s.ex)continue; // saltar agotados
         try{
           const ar=await cPr(p,a);
           const tt=(ar&&ar.tipo&&VT.includes(ar.tipo))?ar.tipo:null;
           const res=tt?br(tt,a,tt==='motorizado'?'fb':null):cl(a);
-          sC(key,{...res,_m:p.id,_cas:[...cascade,{id:p.id,ok:true}]});
-          st.m=p.id;st.cascade=[...cascade,{id:p.id,ok:true}];
+          sC(cKey,{...res,_m:p.id,_cas:[...cascade,{id:p.id,ok:true}]});
+          st.m=p.id;st.cascade=[...cascade,{id:p.id,ok:true}];st.usedAPI=true;
           return res;
         }catch(e){
           cascade.push({id:p.id,ok:false});
@@ -383,7 +390,7 @@
       }
       // 3. Fallback local
       if(cascade.length>0)st.cascade=[...cascade,{id:'local',ok:true}];
-      st.m='local';
+      st.m='local';st.usedAPI=false;
       return cl(a);
     }
 
@@ -408,7 +415,7 @@
             <span class="font-medium text-sm flex-1">${p.name}</span>
             <span class="ps ${stCls}"><i class="fa-solid ${stIco}"></i> ${stTxt}</span>
           </div>
-          <input type="password" class="if mb-1" placeholder="API Key..." value="${s.k||''}" oninput="updK('${p.id}',this.value)" ${!isA&&!hasK?'style="opacity:.4"':''}>
+          <input type="password" class="if mb-1" placeholder="API Key..." value="${(s.k||'').replace(/"/g,'&'+'quot;')}" oninput="updK('${p.id}',this.value)" ${!isA&&!hasK?'style="opacity:.4"':''}>
           <p class="text-xs" style="color:var(--fm);opacity:.5">${p.hint}</p>
         </div>`;
       });
@@ -456,7 +463,7 @@
       const h=location.hash.slice(1);if(!h)return;
       const p=h.split('-');if(p.length!==6)return;
       const ks=['act','vel','pot','pas','vis','dis'];const o={};
-      for(let i=0;i<7;i++)o[ks[i]]=p[i];
+      for(let i=0;i<ks.length;i++)o[ks[i]]=p[i];
       const allVals={};S.forEach(s=>s.o.forEach(o=>{allVals[s.id]=allVals[s.id]||{};allVals[s.id][o.v]=1}));
       for(const k of ks){if(!allVals[k]||!allVals[k][o[k]])return}
       st.s=6;st.a={...o};st.cascade=[];st.m='local';rWiz();setTimeout(sub,400);
@@ -465,7 +472,7 @@
     function showOnb(){
       if(localStorage.getItem(OB_KEY))return;
       const d=document.createElement('div');d.id='ob';d.className='ob';
-      d.innerHTML='<div class="ob-c"><h2><i class="fa-solid fa-bolt" style="color:var(--ac)"></i> Bienvenido a VerificaMoto PE</h2><p>Responde 7 preguntas sobre tu vehiculo electrico y sabras si <strong>requiere Placa, SOAT, Brevete</strong>, donde puedes circular y que multas arriesgas.</p><p>Tus respuestas se procesan localmente. Ningun dato sale de tu navegador.</p><label><input type="checkbox" id="obc"> No mostrar mas</label><div class="flex justify-center mt-3"><button class="bp text-sm" onclick="hideOnb()"><i class="fa-solid fa-play"></i> Comenzar</button></div></div>';
+      d.innerHTML='<div class="ob-c"><h2><i class="fa-solid fa-bolt" style="color:var(--ac)"></i> Bienvenido a VerificaMoto PE</h2><p>Responde 6 preguntas sobre tu vehiculo electrico y sabras si <strong>requiere Placa, SOAT, Brevete</strong>, donde puedes circular y que multas arriesgas.</p><p>Tus respuestas se procesan localmente. Ningun dato sale de tu navegador.</p><label><input type="checkbox" id="obc"> No mostrar mas</label><div class="flex justify-center mt-3"><button class="bp text-sm" onclick="hideOnb()"><i class="fa-solid fa-play"></i> Comenzar</button></div></div>';
       document.body.appendChild(d);
     }
     function hideOnb(){const d=document.getElementById('ob');if(d)d.remove();if(document.getElementById('obc').checked)try{localStorage.setItem(OB_KEY,'1')}catch{}}
@@ -480,7 +487,7 @@
       S.forEach((s,i)=>{
         const dir=i<st.s?'l':(i>st.s?'r':'a'),sel=st.a[s.id];
         sh+=`<div class="sp ${dir}" data-step="${i}" style="min-height:350px"><div class="w-full max-w-md mx-auto">
-          <div class="ss"><div class="si2" style="background:${ST_C[s.id]}"><i class="fa-solid ${ST_I[s.id]}"></i></div><span class="st2" style="color:${ST_C[s.id]}">${s.id}</span></div>
+          <div class="ss"><div class="si2" style="background:${ST_C[s.id]}"><i class="fa-solid ${ST_I[s.id]}"></i></div><span class="st2" style="color:${ST_C[s.id]}" aria-hidden="true">${s.id}</span></div>
           <p class="text-xs font-bold mb-2 tracking-wider" style="color:var(--ac);font-family:'Orbitron',monospace">PASO ${i+1}/${S.length}</p>
           <h2 class="text-base sm:text-lg font-bold mb-3 leading-tight">${s.q}</h2>
           <div class="og mb-2">${s.o.map(o=>`<div class="oc ${sel===o.v?'s':''}" onclick="selO('${s.id}','${o.v}',${i},event)" role="button" tabindex="0" onkeydown="if(event.key==='Enter')selO('${s.id}','${o.v}',${i},event)" aria-pressed="${sel===o.v}"><div class="iw"><i class="${o.i}"></i></div><div class="ot">${o.l}</div><div class="od">${o.d}</div></div>`).join('')}</div>
@@ -540,7 +547,7 @@
         <details class="mb-4" style="border:1px solid var(--bd);border-radius:var(--r);overflow:hidden"><summary class="px-3 py-2.5 cursor-pointer text-sm font-medium flex items-center gap-2" style="background:rgba(255,255,255,.015)"><i class="fa-solid fa-list-check" style="color:var(--ac)"></i>Desglose de criterios</summary><div class="px-3 py-2">${r.cr.map(c=>`<div class="cr"><i class="fa-solid ${ic[c.s]} ${sc[c.s]}" style="width:14px;text-align:center;margin-top:2px;flex-shrink:0;font-size:.7rem"></i><div class="flex-1"><span class="text-sm font-medium">${c.n}</span><span class="text-xs ml-1.5" style="color:var(--fm)">${c.vl}</span><div class="text-xs mt-0.5" style="color:var(--fm);opacity:.75">${c.d}</div></div></div>`).join('')}</div></details>
         <div class="p-3 rounded-lg mb-4" style="background:rgba(255,110,64,.06);border:1px solid rgba(255,110,64,.12)">
           <p class="text-xs font-bold mb-1.5" style="color:var(--da);font-family:'Orbitron',monospace"><i class="fa-solid fa-triangle-exclamation" style="color:var(--da)"></i> AVISO IMPORTANTE</p>
-          <p class="text-xs mb-1.5" style="color:var(--fg);line-height:1.55">🚲⚡ Prohibido circular por ciclovías con vehículos eléctricos motorizados</p>
+          <p class="text-xs mb-1.5" style="color:var(--fg);line-height:1.55"><span aria-hidden="true">🚲⚡</span> Prohibido circular por ciclovías con vehículos eléctricos motorizados</p>
           <p class="text-xs mb-1.5" style="color:var(--fm);line-height:1.55">Desde el <strong style="color:var(--fg)">2 de agosto de 2026</strong>, los conductores de motocicletas y otros vehículos eléctricos motorizados que invadan las ciclovías serán sancionados con la infracción <strong style="color:var(--fg)">G32</strong>, equivalente a una multa de <strong style="color:var(--da)">S/ 550</strong>.</p>
           <p class="text-xs mb-1" style="color:var(--fm);line-height:1.55">Además, otras infracciones pueden incrementar la sanción:</p>
           <ul class="text-xs mb-1.5" style="color:var(--fm);line-height:1.6;padding-left:1.1rem;list-style:disc">
@@ -567,9 +574,9 @@
       const m=document.getElementById('mc');
       m.innerHTML=`<div class="text-center py-14" style="animation:ri .35s ease forwards"><div class="inline-block mb-3" style="width:42px;height:42px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .7s linear infinite"></div><p class="text-sm" style="color:var(--fm)">Verificando...</p></div>`;
       if(!document.getElementById('ss')){const s=document.createElement('style');s.id='ss';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s)}
-      try{const r=await cv(st.a);st.r=r;inc();rRes(r)}catch(e){const r=cl(st.a);st.r=r;st.m='local';st.cascade=[];inc();rRes(r);toast('Error en consulta, se uso logica local','error')}
+      try{const r=await cv(st.a);st.r=r;if(st.usedAPI)inc();rRes(r)}catch(e){const r=cl(st.a);st.r=r;st.m='local';st.cascade=[];st.usedAPI=false;rRes(r);toast('Error en consulta, se uso logica local','error')}
     }
-    function rst(){st.s=0;st.a={};st.r=null;st.m='local';st.cascade=[];if(location.hash)location.hash='';rWiz()}
+    function rst(){st.s=0;st.a={};st.r=null;st.m='local';st.cascade=[];st.usedAPI=false;if(location.hash)location.hash='';rWiz()}
 
     /* ====== COPIAR ====== */
     function cpR(){if(!st.r)return;const r=st.r;const ct=r.ci.map(c=>`${c.v}: ${c.p===null?'CONSULTAR':(c.p?'PERMITIDO':'PROHIBIDO')} — ${c.d}`).join('\n');
@@ -581,6 +588,7 @@
     /* ====== PARTICULAS ====== */
     function iPt(){const cv=document.getElementById('pc'),cx=cv.getContext('2d');let ps=[];for(let i=0;i<18;i++)ps.push({x:Math.random()*cv.width,y:Math.random()*cv.height,sz:Math.random()*1.2+.3,sy:-(Math.random()*.2+.04),sx:(Math.random()-.5)*.1,op:Math.random()*.2+.04,p:Math.random()*6.28});
       function rs(){cv.width=innerWidth;cv.height=innerHeight}rs();addEventListener('resize',rs);
+      if(matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
       (function f(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.y+=p.sy;p.x+=p.sx;p.p+=.015;const o=p.op*(.6+.4*Math.sin(p.p));if(p.y<-8){p.y=cv.height+8;p.x=Math.random()*cv.width}cx.beginPath();cx.arc(p.x,p.y,Math.max(.1,p.sz),0,6.28);cx.fillStyle=`rgba(0,230,118,${o})`;cx.fill()});requestAnimationFrame(f)})()}
 
     /* ====== INIT ====== */

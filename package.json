@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "tailwindcss -i ./src/input.css -o ./styles.css --minify",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test_flows.js && node test_ui.js && node test_features.js"
   },
   "repository": {
     "type": "git",
