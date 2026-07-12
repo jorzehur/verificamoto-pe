@@ -6,7 +6,7 @@ Este documento contiene la estructura de preguntas (quiz), las reglas de clasifi
 
 ## 1. Estructura de Preguntas del Formulario (Quiz Flow)
 
-El cuestionario consta de 6 preguntas que definen las características físicas y operativas del vehículo eléctrico en consulta:
+El cuestionario consta de 7 preguntas que definen las características físicas y operativas del vehículo eléctrico en consulta:
 
 1. **Activación del motor (`act`):**
    * **Pedaleo asistido (`ped`):** El motor solo se activa al pedalear (tracción humana asistida).
@@ -32,6 +32,11 @@ El cuestionario consta de 6 preguntas que definen las características físicas 
 6. **Kit de visibilidad permanente del vehículo (`vis`):**
    * **Sí (`si`):** Cuenta con luz delantera, luz de freno posterior y láminas/cintas retrorreflectantes laterales de fábrica.
    * **No (`no`):** No dispone del kit de visibilidad permanente (obligatorio por ley para VMP, SPA y motos, tanto de día como de noche).
+
+7. **Configuración física del vehículo (`dis`):**
+   * **Scooter / Monopatín (`sco`):** Plataforma para ir de pie o sillín plegable/removible, sin carrocería de motocicleta.
+   * **Motocicleta / Trimoto (`mot`):** Asiento fijo de fábrica, chasis/carenado con apariencia de motocicleta, o espejos y comandos de luces de serie.
+   * **Hard trigger (RNV / AAP):** Si la configuración física es de motocicleta (`mot`), el vehículo se clasifica **automáticamente como Vehículo Automotor Categoría L**, sin importar velocidad ni potencia declaradas. La naturaleza jurídica se determina por la configuración mecánica y de fábrica, no solo por el software o la potencia.
 
 ---
 

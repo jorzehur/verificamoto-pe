@@ -6,7 +6,7 @@ const scriptMatch = html.match(/<script>([\s\S]*)<\/script>/);
 if (!scriptMatch) { console.log('FALLO: no se encontro <script>'); process.exit(1); }
 
 function makeDom() {
-  const dom = new JSDOM(`<!DOCTYPE html><html><body><div id="mc"></div><div id="dots"></div><div id="sov"><div class="sdr"><div id="prov-list"></div><div id="hlist"></div></div></div><div id="tcc"></div></body></html>`, {
+  const dom = new JSDOM(`<!DOCTYPE html><html><body><div id="mc"></div><div id="dots"></div><canvas id="pc"></canvas><div id="sov"><div class="sdr"><div id="prov-list"></div><div id="hlist"></div></div></div><div id="tcc"></div></body></html>`, {
     runScripts: 'dangerously', url: 'https://verificamoto.pe/', pretendToBeVisual: true,
     beforeParse(window) {
       window.HTMLCanvasElement.prototype.getContext = function () {
@@ -21,9 +21,9 @@ function makeDom() {
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 const flows = [
-  { name:'SPA',        ans:['ped','25','350','1','120','si'],  badge:'SPA',        exento:true },
-  { name:'VMP',        ans:['ace','25','350','1','120','si'],  badge:'VMP',        exento:true },
-  { name:'MOTORIZADO', ans:['ace','+25','+350','1','120','si'],badge:'MOTORIZADO', exento:false },
+  { name:'SPA',        ans:['ped','25','350','1','120','si','sco'],  badge:'SPA',        exento:true },
+  { name:'VMP',        ans:['ace','25','350','1','120','si','sco'],  badge:'VMP',        exento:true },
+  { name:'MOTORIZADO', ans:['ace','+25','+350','1','120','si','mot'],badge:'AUTOMOTOR', exento:false },
 ];
 
 (async () => {
