@@ -92,6 +92,7 @@
         </div>
         <div class="flex items-center gap-3">
           <div class="flex items-center" title="Consultas hoy"><span class="dl hidden sm:inline">Hoy</span><div class="dd" id="dots"></div></div>
+          <button onclick="tgH()" class="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Historial" title="Historial"><i class="fa-solid fa-clock-rotate-left" style="color:var(--fm);font-size:.8rem"></i></button>
           <button onclick="tgS()" class="hidden w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Config" title="Config APIs"><i class="fa-solid fa-gear" style="color:var(--fm);font-size:.8rem"></i></button>
         </div>
       </div>
@@ -133,6 +134,15 @@
         <p class="text-xs font-bold mb-2" style="color:var(--fg);font-family:'Orbitron',monospace;font-size:.65rem;letter-spacing:.4px"><i class="fa-solid fa-history" style="color:var(--ac)"></i> HISTORIAL</p>
         <div id="hlist"></div>
       </div>
+    </div>
+  </div>
+  <div class="so" id="hov" onclick="if(event.target===this)tgH()">
+    <div class="sdr" role="dialog" aria-label="Historial" style="max-width:360px">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-bold" style="font-family:'Orbitron',monospace;font-size:.9rem"><i class="fa-solid fa-history" style="color:var(--ac)"></i> Historial</h2>
+        <button onclick="tgH()" class="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5" aria-label="Cerrar"><i class="fa-solid fa-xmark" style="color:var(--fm)"></i></button>
+      </div>
+      <div id="hist-list"></div>
     </div>
   </div>
   <div class="tc" id="tcc" aria-live="polite"></div>
@@ -436,6 +446,7 @@
 
     /* ====== TOGGLE SETTINGS ====== */
     function tgS(){const o=document.getElementById('sov');o.classList.toggle('open');if(o.classList.contains('open')){rSet();rHist(document.getElementById('hlist'))}}
+    function tgH(){const o=document.getElementById('hov');o.classList.toggle('open');if(o.classList.contains('open'))rHist(document.getElementById('hist-list'))}
 
     /* ====== VISUAL TOOLTIPS, PRESETS, HASH, ONBOARDING ====== */
     const ST_I={act:'fa-plug',vel:'fa-gauge-high',pot:'fa-bolt',pas:'fa-person',vis:'fa-eye',dis:'fa-motorcycle'};
