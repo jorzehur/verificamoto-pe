@@ -81,6 +81,23 @@
     @media print{body{background:#fff!important;color:#000!important}canvas,.gl,.hd,.so,.tc,.ft,#pc,.rr .ri2{display:none!important}.sh{min-height:auto}.sh main{padding:0!important}.rp{animation:none!important}.oc,.cvr,.cb{break-inside:avoid}.oc.s{border-color:#000}.rb{border:1px solid #000!important;background:#eee!important;color:#000!important}.cvr{border:1px solid #ccc}.wb{border:1px solid #000!important;background:#ffe0e0!important}.cb{border:1px solid #000!important;background:#f5f5f5!important}.cb .ct{color:#333!important}.mb-4{margin-bottom:.4rem!important}.text-xs{font-size:8pt!important}.text-sm{font-size:9pt!important}}
     /* Focus visible */
     *:focus-visible{outline:2px solid var(--ac);outline-offset:2px}.oc:focus-visible{outline-color:var(--in)}.bp:focus-visible,.bg:focus-visible{outline:2px solid var(--in)}
+    /* Guide */
+    .gv-h{font-family:'Orbitron',monospace;font-size:.78rem;font-weight:700;margin:1.15rem 0 .55rem;color:var(--ac);letter-spacing:.4px}
+    .gv-h:first-of-type{margin-top:0}
+    .gcard{border-radius:12px;padding:.8rem .9rem;margin-bottom:.55rem;border:1px solid var(--bd);background:rgba(255,255,255,.02)}
+    .gcard.spa{border-color:rgba(0,230,118,.3);background:var(--ad)}
+    .gcard.vmp{border-color:rgba(64,196,255,.3);background:var(--id)}
+    .gcard.mot{border-color:rgba(255,215,64,.3);background:var(--wd)}
+    .gcard h3{font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem}
+    .gcard p{font-size:.72rem;color:var(--fg);line-height:1.5;opacity:.92}
+    .gcard .gt{font-size:.68rem;color:var(--fm);margin-top:.35rem;line-height:1.45}
+    .gcl{list-style:none;padding:0;margin:0}
+    .gcl li{display:flex;gap:.5rem;align-items:flex-start;font-size:.72rem;color:var(--fg);line-height:1.5;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .gcl li:last-child{border-bottom:0}
+    .gcl .gi{color:var(--ac);flex-shrink:0;margin-top:2px;width:14px;text-align:center}
+    .gnote{border-radius:10px;padding:.75rem .85rem;background:rgba(64,196,255,.07);border:1px solid rgba(64,196,255,.18);font-size:.72rem;color:var(--fg);line-height:1.55}
+    .gnote b{color:var(--in)}
+    .gnote .gcl li{border-bottom-color:rgba(64,196,255,.12)}
     </style>
   </head>
 <body>
@@ -97,6 +114,7 @@
         </div>
         <div class="flex items-center gap-3">
           <div class="flex items-center" title="Consultas hoy"><span class="dl hidden sm:inline">Hoy</span><div class="dd" id="dots"></div></div>
+          <button onclick="tgG()" class="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Guia de clasificacion" title="Guia de clasificacion"><i class="fa-solid fa-book-open" style="color:var(--fm);font-size:.8rem"></i></button>
           <button onclick="tgH()" class="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Historial" title="Historial"><i class="fa-solid fa-clock-rotate-left" style="color:var(--fm);font-size:.8rem"></i></button>
           <button onclick="tgS()" class="hidden w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors" aria-label="Config" title="Config APIs"><i class="fa-solid fa-gear" style="color:var(--fm);font-size:.8rem"></i></button>
         </div>
@@ -150,6 +168,53 @@
       <div id="hist-list"></div>
     </div>
   </div>
+  <div class="so" id="gov" onclick="if(event.target===this)tgG()">
+    <div class="sdr" role="dialog" aria-label="Guia de clasificacion" style="max-width:470px">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-bold" style="font-family:'Orbitron',monospace;font-size:.95rem"><i class="fa-solid fa-book-open" style="color:var(--ac)"></i> Guía de clasificación</h2>
+        <button onclick="tgG()" class="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/5" aria-label="Cerrar"><i class="fa-solid fa-xmark" style="color:var(--fm)"></i></button>
+      </div>
+      <p class="text-xs mb-2" style="color:var(--fm);line-height:1.55">Perú regula los vehículos eléctricos pequeños de 3 formas. La clave <b style="color:var(--fg)">no es solo la potencia</b>: importa cómo se activa, su velocidad, su peso y su diseño.</p>
+      <p class="gv-h">LAS 3 CATEGORÍAS</p>
+      <div class="gcard spa">
+        <h3><i class="fa-solid fa-bicycle" style="color:var(--ac)"></i> Bicicleta SPA</h3>
+        <p>Pedaleo asistido · Potencia <b style="color:var(--ac)">≤ 350W</b> · Velocidad ≤ 25 km/h. El motor solo ayuda si pedaleas.</p>
+        <p class="gt">→ Sin Placa, SOAT ni Brevete. Puede usar la ciclovía.</p>
+      </div>
+      <div class="gcard vmp">
+        <h3><i class="fa-solid fa-person" style="color:var(--in)"></i> Scooter VMP</h3>
+        <p>Acelerador manual · 12–25 km/h · 1 persona · <b style="color:var(--in)">Potencia hasta 1000W</b> (2500W con autoequilibrado). De pie sobre plataforma.</p>
+        <p class="gt">→ Sin Placa, SOAT ni Brevete. Puede usar la ciclovía.</p>
+      </div>
+      <div class="gcard mot">
+        <h3><i class="fa-solid fa-motorcycle" style="color:var(--wa)"></i> Moto Categoría L</h3>
+        <p>Acelerador autónomo · apariencia de motocicleta (asiento fijo, espejos, carenado) · 2+ personas o peso de moto.</p>
+        <p class="gt">→ Requiere Placa + SOAT + Brevete B2. Ciclovía PROHIBIDA.</p>
+      </div>
+      <p class="gv-h">CRITERIOS TÉCNICOS DEL VMP</p>
+      <p class="text-xs mb-2" style="color:var(--fm);line-height:1.5">Según DS 023-2021-MTC y RD 0016-2026-MTC/18, para ser VMP tu scooter debe cumplir <b style="color:var(--fg)">TODOS</b>:</p>
+      <ul class="gcl">
+        <li><i class="fa-solid fa-gauge gi"></i><span><b>Velocidad:</b> mayor a 12 km/h y tope máximo de 25 km/h.</span></li>
+        <li><i class="fa-solid fa-bolt gi"></i><span><b>Potencia:</b> hasta 1000W (sin autoequilibrado) o hasta 2500W (con autoequilibrado).</span></li>
+        <li><i class="fa-solid fa-weight-hanging gi"></i><span><b>Peso en marcha:</b> inferior a 50 kg.</span></li>
+        <li><i class="fa-solid fa-ruler-horizontal gi"></i><span><b>Longitud máxima:</b> 2000 mm.</span></li>
+        <li><i class="fa-solid fa-car-battery gi"></i><span><b>Batería:</b> limitada a 100 VCC.</span></li>
+        <li><i class="fa-solid fa-stop gi"></i><span><b>Frenos:</b> dos sistemas independientes, desaceleración mínima de 3,5 m/s².</span></li>
+        <li><i class="fa-solid fa-circle gi"></i><span><b>Ruedas:</b> diámetro mínimo de 203,2 mm (8 pulgadas).</span></li>
+        <li><i class="fa-solid fa-user gi"></i><span><b>Capacidad:</b> solo una persona (monoplaza).</span></li>
+      </ul>
+      <p class="gv-h">¿POR QUÉ UN SCOOTER DE 1000W SÍ Y MI BICI-MOTO DE 350W NO?</p>
+      <div class="gnote">
+        <p style="margin-bottom:.4rem">Duda muy común. La respuesta <b>no es la potencia ni la apariencia</b>, sino la <b>seguridad vial</b>:</p>
+        <ul class="gcl" style="margin-top:.2rem">
+          <li><i class="fa-solid fa-weight-hanging gi"></i><span><b>Energía de impacto:</b> la bici-moto pesa 40–70 kg (más tú). A 25 km/h un choque es destructivo; el scooter de pie pesa 15–25 kg y transfiere mucha menos energía.</span></li>
+          <li><i class="fa-solid fa-road gi"></i><span><b>Huella en la ciclovía:</b> las ciclovías son angostas. La bici-moto ocupa casi todo el carril (espejos, carenado); el scooter lineal es delgado y deja pasar.</span></li>
+          <li><i class="fa-solid fa-gauge-high gi"></i><span><b>Acelerador autónomo:</b> si avanza solo al girar la mano (sin que pedalees), legalmente es vehículo automotor = Categoría L, obligado a la calzada.</span></li>
+        </ul>
+        <p style="margin-top:.6rem;color:var(--fm)">Tu bici-moto de 350W y 25 km/h se excluye por tener <b style="color:var(--fg)">acelerador de mano y estructura de moto</b>, no por su potencia. Debe circular por la calzada con Placa, SOAT y Brevete B2.</p>
+      </div>
+    </div>
+  </div>
   <div class="tc" id="tcc" aria-live="polite"></div>
 
   <script>
@@ -177,9 +242,9 @@
         {v:'25',l:'Mas de 12 km/h hasta 25 km/h',d:'Rango tipico VMP',i:'fa-solid fa-gauge'},
         {v:'+25',l:'Mas de 25 km/h',d:'Supera limite VMP',i:'fa-solid fa-gauge-high'}
       ]},
-      {id:'pot',q:'Potencia nominal del motor?',h:'En Watts (W). Clave para Bicicleta SPA. R.D. 0016-2026-MTC/18 NO exige limite para VMP.',o:[
-        {v:'350',l:'Hasta 350W',d:'Potencia baja/media',i:'fa-solid fa-bolt'},
-        {v:'+350',l:'Mas de 350W',d:'Potencia alta',i:'fa-solid fa-bolt-lightning'}
+      {id:'pot',q:'Potencia nominal del motor?',h:'En Watts (W). Para Bicicleta SPA el tope es 350W. El Scooter VMP permite hasta 1000W (DS 023-2021-MTC). R.D. 0016-2026-MTC/18 no fija otro limite para VMP.',o:[
+        {v:'350',l:'Hasta 350W',d:'Tope Bicicleta SPA',i:'fa-solid fa-bolt'},
+        {v:'+350',l:'Mas de 350W',d:'VMP permite hasta 1000W',i:'fa-solid fa-bolt-lightning'}
       ]},
       {id:'pas',q:'Cuantas personas transporta segun diseno?',h:'Diseno original de fabrica. No cuenta si agregas accesorios despues.',o:[
         {v:'1',l:'Solo 1 persona',d:'Asiento individual',i:'fa-solid fa-person'},
@@ -239,8 +304,8 @@
     }
     function br(t,a,z){
       const cls={spa:'Ciclo — Bicicleta con Pedaleo Asistido (SPA)',vmp:'Vehiculo de Movilidad Personal (VMP)',motorizado:'Vehiculo Automotor Electrico (Cat. L)',noclasif:'No clasificado como VMP ni vehiculo automotor'};
-      const ex={spa:`Cumple los 3 requisitos para Bicicleta SPA (DS N.° 019-2018-MTC, DS N.° 012-2020-MTC): potencia <=350W, traccion asistida por pedaleo, velocidad <=25 km/h. "No constituye vehiculo automotor ni vehiculo electrico". No requiere Placa, SOAT ni Brevete. Puede circular por ciclovias. Casco obligatorio.`,
-        vmp:`Cumple criterios de R.D. N.° 0016-2026-MTC/18: motor electrico, velocidad >12 km/h y <=25 km/h, 1 persona. "No forma parte de la clasificacion vehicular del Anexo I del RNV". No se inmatricula ante SUNARP. No requiere Placa, SOAT ni Brevete. Puede circular por ciclovias segun directrices MTC.`,
+      const ex={        spa:`Cumple los 3 requisitos para Bicicleta SPA (DS N.° 019-2018-MTC, DS N.° 012-2020-MTC): potencia <=350W (este es el tope exclusivo de la Bicicleta SPA; el Scooter VMP permite hasta 1000W), traccion asistida por pedaleo, velocidad <=25 km/h. "No constituye vehiculo automotor ni vehiculo electrico". No requiere Placa, SOAT ni Brevete. Puede circular por ciclovias. Casco obligatorio.`,
+        vmp:`Cumple criterios del DS N.° 023-2021-MTC y la R.D. N.° 0016-2026-MTC/18: motor electrico, velocidad >12 km/h y <=25 km/h, potencia hasta 1000W (2500W con autoequilibrado), 1 persona. "No forma parte de la clasificacion vehicular del Anexo I del RNV". No se inmatricula ante SUNARP. No requiere Placa, SOAT ni Brevete. Puede circular por ciclovias segun directrices MTC.`,
         motorizado:exM(a,z),noclasif:`Segun R.D. N.° 0016-2026-MTC/18, el VMP exige velocidad "mayor a 12 km/h". Tu vehiculo no supera este umbral ni cumple criterios para Cat. L. Caso no regulado. Consulta al MTC.`};
       return{t,cls:cls[t],pl:t==='motorizado',so:t==='motorizado',br:t==='motorizado',ex:ex[t],cr:bc(t,a,z),ci:gc(t,a,z)};
     }
@@ -454,6 +519,7 @@
     /* ====== TOGGLE SETTINGS ====== */
     function tgS(){const o=document.getElementById('sov');o.classList.toggle('open');if(o.classList.contains('open')){rSet();rHist(document.getElementById('hlist'))}}
     function tgH(){const o=document.getElementById('hov');o.classList.toggle('open');if(o.classList.contains('open'))rHist(document.getElementById('hist-list'))}
+    function tgG(){const o=document.getElementById('gov');const h=document.getElementById('hov');const s=document.getElementById('sov');if(h.classList.contains('open'))h.classList.remove('open');if(s.classList.contains('open'))s.classList.remove('open');o.classList.toggle('open')}
 
     /* ====== VISUAL TOOLTIPS, PRESETS, HASH, ONBOARDING ====== */
     const ST_I={act:'fa-plug',vel:'fa-gauge-high',pot:'fa-bolt',pas:'fa-person',vis:'fa-eye',dis:'fa-motorcycle'};
